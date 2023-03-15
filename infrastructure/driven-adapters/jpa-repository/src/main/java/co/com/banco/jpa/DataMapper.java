@@ -14,7 +14,11 @@ import java.util.List;
 
 public class DataMapper {
 
-    public static Movimiento convertirMovimientoDataAMovimiento( MovimientoData movimientoData){
+    private DataMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static Movimiento convertirMovimientoDataAMovimiento(MovimientoData movimientoData){
         return Movimiento.builder()
                 .id(movimientoData.getId())
                 .fecha(movimientoData.getFechaMovimiento())
@@ -42,6 +46,7 @@ public class DataMapper {
                 .password(clienteData.getPassword())
                 .usuario(clienteData.getUsuario())
                 .password(clienteData.getPassword())
+                .estado(clienteData.getEstado())
 //                .cuentaDataList(clienteData.getCuentaDataList())
                 .persona(convertirPersonaDataAPersona(clienteData.getPersonaData()))
                 .build();
@@ -59,6 +64,19 @@ public class DataMapper {
                 .telefono(personaData.getTelefono())
                 .build();
     }
+
+    public static PersonaData convertirPersonaAPersonaData(Persona persona) {
+        return PersonaData.builder()
+                .id(persona.getId())
+                .numeroDocumento(persona.getNumeroDocumento())
+                .tipoDocumento(persona.getTipoDocumento())
+                .nombre(persona.getNombre())
+                .apellido(persona.getApellido())
+                .genero(persona.getGenero())
+                .direccion(persona.getDireccion())
+                .telefono(persona.getTelefono())
+                .build();
+    }
     public static List<Movimiento> converitirListaMovimientosDataAListaMovimiento(Iterable<MovimientoData> movimientoDataIterable) {
         List<Movimiento> listaMovimientos = new ArrayList<>();
         movimientoDataIterable.forEach(
@@ -67,5 +85,28 @@ public class DataMapper {
                 )
         );
         return listaMovimientos;
+    }
+
+    public static List<Cliente> convertirlistClienteDataAListCliente(Iterable<ClienteData> clienteDataIterable) {
+        List<Cliente> listaClientes = new ArrayList<>();
+        clienteDataIterable.forEach(
+                clienteData -> listaClientes.add(
+                        convertirClienteDataACliente(clienteData)
+                )
+        );
+        return listaClientes;
+    }
+
+
+    public static ClienteData convertirClienteAClienteData(Cliente cliente) {
+       return ClienteData.builder()
+               .id(cliente.getId())
+               .estado(cliente.getEstado())
+               .password(cliente.getPassword())
+               .usuario(cliente.getUsuario())
+               .password(cliente.getPassword())
+//                .cuentaDataList(clienteData.getCuentaDataList())
+               .personaData(convertirPersonaAPersonaData(cliente.getPersona()))
+               .build();
     }
 }

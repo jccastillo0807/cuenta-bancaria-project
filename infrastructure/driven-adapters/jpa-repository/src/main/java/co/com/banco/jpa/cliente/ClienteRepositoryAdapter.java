@@ -1,5 +1,6 @@
 package co.com.banco.jpa.cliente;
 
+import co.com.banco.jpa.DataMapper;
 import co.com.banco.jpa.helper.AdapterOperations;
 import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.cliente.gateways.ClienteRepository;
@@ -18,6 +19,17 @@ public class ClienteRepositoryAdapter extends AdapterOperations<Cliente, Cliente
 
     @Override
     public List<Cliente> encontrarClientes() {
-        return null;
+        return DataMapper.convertirlistClienteDataAListCliente(repository.findAll());
+    }
+
+    @Override
+    public Cliente encontrarPorId(Integer id) {
+        return DataMapper.convertirClienteDataACliente(repository.findById(id).get());
+    }
+
+    @Override
+    public Cliente guardarCliente(Cliente cliente) {
+        ClienteData clienteData = DataMapper.convertirClienteAClienteData(cliente);
+        return DataMapper.convertirClienteDataACliente(repository.save(clienteData));
     }
 }

@@ -10,4 +10,7 @@ public interface ClienteRepository {
 
     Cliente findById(Integer id);
 
+    Cliente encontrarPorId(Integer id);
+
+    Cliente guardarCliente(Cliente cliente);
 }

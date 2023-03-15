@@ -17,6 +17,7 @@ public class Cliente {
     private Integer id;
     private String password;
     private String usuario;
+    private String estado;
     private Persona persona;
     private List<Cuenta> cuentaDataList;
 }

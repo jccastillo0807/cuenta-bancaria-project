@@ -6,18 +6,18 @@ INSERT INTO t_personas (apellido, direccion, genero, nombre, tipo_documento, tel
 INSERT INTO t_personas (apellido, direccion, genero, nombre, tipo_documento, telefono, numero_documento) VALUES ('Apellido_test_4', 'Direccion_test_3', 'Masculino', 'Nombre_4', 'Cedula Extranejeria', '059254785', '1001345678');
 
 --TABLA CLIENTES
-INSERT INTO t_clientes (password, usuario, id_persona) VALUES ('1234', 'dApellido_test', 2);
-INSERT INTO t_clientes (password, usuario, id_persona) VALUES ('1234', 'nApellido_test_2', 3);
-INSERT INTO t_clientes (password, usuario, id_persona) VALUES ('1234', 'nApellido_test_3', 4);
-INSERT INTO t_clientes (password, usuario, id_persona) VALUES ('1234', 'nApellido_test_4', 5);
-INSERT INTO t_clientes (password, usuario, id_persona) VALUES ('1234', 'jlema', 1);
+INSERT INTO t_clientes (password, usuario, id_persona, estado) VALUES ('1234', 'dApellido_test', 2, 'ACTIVO');
+INSERT INTO t_clientes (password, usuario, id_persona, estado) VALUES ('1234', 'nApellido_test_2', 3, 'INACTIVO');
+INSERT INTO t_clientes (password, usuario, id_persona, estado) VALUES ('1234', 'nApellido_test_3', 4, 'INACTIVO');
+INSERT INTO t_clientes (password, usuario, id_persona, estado) VALUES ('1234', 'nApellido_test_4', 5, 'ACTIVO');
+INSERT INTO t_clientes (password, usuario, id_persona, estado) VALUES ('1234', 'jlema', 1, 'ACTIVO');
 
 --TABLA CUENTAS
 INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, id_cliente) VALUES ('ACTIVA', '178758', '100000', 'AHORRO', 1);
-INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, id_cliente) VALUES ('INACTIVA', '978759', '100000', 'CORRIENTE', 1);
-INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, id_cliente) VALUES ('BLOQUEADA', '878758', '1000000', 'AHORRO', 1);
-INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, id_cliente) VALUES ('ACTIVA', '778757', '20000000', 'CORRIENTE', 1);
-INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, id_cliente) VALUES ('ACTIVA', '678756', '0', 'AHORRO', 1);
+INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, id_cliente) VALUES ('INACTIVA', '978759', '100000', 'CORRIENTE', 2);
+INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, id_cliente) VALUES ('BLOQUEADA', '878758', '1000000', 'AHORRO', 3);
+INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, id_cliente) VALUES ('ACTIVA', '778757', '20000000', 'CORRIENTE', 4);
+INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, id_cliente) VALUES ('ACTIVA', '678756', '0', 'AHORRO', 5);
 
 --TABLA MOVIMIENTOS
 INSERT INTO t_movimientos (fecha_movimiento, saldo, tipo_movimiento, valor_movimiento, id_cuenta) VALUES ('2023-01-01', '100000', 'DEBITO', '50000', 1);

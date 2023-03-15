@@ -20,7 +20,7 @@ public class MovimientoService {
     private final MovimientoUseCase movimientoUseCase;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Movimiento> verTodos() {
+    public List<Movimiento> verTodosLosMovimientos() {
         return movimientoUseCase.obtenerMovimientos();
     }
 

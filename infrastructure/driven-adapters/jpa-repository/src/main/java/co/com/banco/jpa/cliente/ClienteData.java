@@ -32,6 +32,10 @@ public class ClienteData {
     @Column(name = "usuario")
     private String usuario;
 
+    @NotEmpty
+    @Column(name = "estado")
+    private String estado;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_persona", referencedColumnName = "id")
     private PersonaData personaData;
