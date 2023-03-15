@@ -39,10 +39,11 @@ public class CuentaData {
     @Column(name = "estado_cuenta")
     private String estado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_movimiento", referencedColumnName = "id")
-    private MovimientoData movimientoData;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaData")
-    private List<ClienteData> clienteDataList;
+    private List<MovimientoData> movimientoDataList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id")
+    private ClienteData clienteData;
 }
+

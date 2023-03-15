@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +17,6 @@ public class Cliente {
     private Integer id;
     private String password;
     private String usuario;
-    private Persona idPersona;
-    private Cuenta idCuenta;
+    private Persona persona;
+    private List<Cuenta> cuentaDataList;
 }

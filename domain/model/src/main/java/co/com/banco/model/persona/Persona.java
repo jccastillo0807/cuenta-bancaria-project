@@ -13,10 +13,8 @@ public class Persona {
     private Integer id;
     private String numeroDocumento;
     private String tipoDocumento;
-    private String primerNombre;
-    private String segundoNombre;
-    private String primerApellido;
-    private String segundoApellido;
+    private String nombre;
+    private String apellido;
     private String genero;
     private String direccion;
     private String telefono;

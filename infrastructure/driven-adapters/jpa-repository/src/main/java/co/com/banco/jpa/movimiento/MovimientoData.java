@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @Entity
@@ -39,6 +38,8 @@ public class MovimientoData {
     @Column(name = "saldo")
     private Long saldo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movimientoData")
-    private List<CuentaData> cuentaData;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cuenta", referencedColumnName = "id")
+    private CuentaData cuentaData;
+
 }

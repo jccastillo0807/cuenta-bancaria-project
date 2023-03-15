@@ -23,28 +23,20 @@ public class PersonaData {
     private Integer id;
 
     @NotEmpty
-    @Column(name = "tipo_documento")
+    @Column(name = "numero_documento", unique = true)
     private String numeroDocumento;
 
     @NotEmpty
-    @Column(name = "numero_documento", length = 20)
+    @Column(name = "tipo_documento", length = 20)
     private String tipoDocumento;
 
     @NotEmpty
-    @Column(name = "primer_nombre", length = 50)
-    private String primerNombre;
+    @Column(name = "nombre", length = 50)
+    private String nombre;
 
     @NotEmpty
-    @Column(name = "segundo_nombre", length = 50)
-    private String segundoNombre;
-
-    @NotEmpty
-    @Column(name = "primer_apellido", length = 50)
-    private String primerApellido;
-
-    @NotEmpty
-    @Column(name = "segundo_apellido", length = 50)
-    private String segundoApellido;
+    @Column(name = "apellido", length = 50)
+    private String apellido;
 
     @NotEmpty
     @Column(name = "genero")
@@ -55,7 +47,7 @@ public class PersonaData {
     private String direccion;
 
     @NotEmpty
-    @Column(name = "telefoo")
+    @Column(name = "telefono")
     private String telefono;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "personaData")

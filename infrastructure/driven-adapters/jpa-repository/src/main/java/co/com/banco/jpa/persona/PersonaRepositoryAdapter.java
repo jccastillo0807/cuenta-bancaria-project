@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PersonaRepositoryAdapter extends AdapterOperations<Persona, PersonaData, Integer, PersonaDataRepository>
-implements PersonaRepository {
+        implements PersonaRepository {
 
     @Autowired
     public PersonaRepositoryAdapter(PersonaDataRepository repository, ObjectMapper mapper) {
-        super(repository, mapper, d-> mapper.mapBuilder(d, Persona.PersonaBuilder.class).build());
+        super(repository, mapper, d -> mapper.mapBuilder(d, Persona.PersonaBuilder.class).build());
     }
 }

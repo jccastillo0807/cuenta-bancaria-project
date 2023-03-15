@@ -1,6 +1,7 @@
 package co.com.banco.model.cuenta;
 
 
+import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.movimiento.Movimiento;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,4 +21,5 @@ public class Cuenta {
     private Long saldoInicial;
     private String estado;
     private List<Movimiento> listaMovimientos;
+    private Cliente cliente;
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 
 @Data
@@ -35,7 +36,6 @@ public class ClienteData {
     @JoinColumn(name = "id_persona", referencedColumnName = "id")
     private PersonaData personaData;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cuenta", referencedColumnName = "id")
-    private CuentaData cuentaData;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clienteData")
+    private List<CuentaData> cuentaDataList;
 }
