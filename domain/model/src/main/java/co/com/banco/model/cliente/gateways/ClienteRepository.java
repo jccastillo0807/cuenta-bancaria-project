@@ -6,9 +6,6 @@ import java.util.List;
 
 public interface ClienteRepository {
     List<Cliente> encontrarClientes();
-    Cliente save (Cliente cliente);
-
-    Cliente findById(Integer id);
 
     Cliente encontrarPorId(Integer id);
 

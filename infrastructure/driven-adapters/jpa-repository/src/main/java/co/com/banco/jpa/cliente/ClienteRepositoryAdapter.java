@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class ClienteRepositoryAdapter extends AdapterOperations<Cliente, ClienteData, Integer, ClienteDataRepository>
@@ -26,6 +27,10 @@ public class ClienteRepositoryAdapter extends AdapterOperations<Cliente, Cliente
 
     @Override
     public Cliente encontrarPorId(Integer id) {
+        ClienteData clienteData = repository.findById(id).orElse(null);
+        if (Objects.isNull(clienteData)) {
+            return null;
+        }
         return DataMapper.convertirClienteDataACliente(repository.findById(id).get());
     }
 

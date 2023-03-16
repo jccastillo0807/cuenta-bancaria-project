@@ -29,14 +29,14 @@ public class ClienteUseCase {
        return clienteRepository.guardarCliente(cliente);
     }
 
-    public void inactivarCliente(Integer id) {
+    public Cliente inactivarCliente(Integer id) {
         Cliente cliente = clienteRepository.encontrarPorId(id);
 
         if (Objects.isNull(cliente)){
-            return;
+            return null;
         }
         cliente.setEstado(ESTADO_INACTIVO);
-        clienteRepository.guardarCliente(cliente);
+        return clienteRepository.guardarCliente(cliente);
 
     }
 
@@ -46,7 +46,7 @@ public class ClienteUseCase {
         Persona personaEnBaseDeDatos = personaRepository.findById(cliente.getPersona().getId());
 
         if (Objects.isNull(clienteEnBaseDeDatos)){
-            return new Cliente();
+            return null;
         }
         clienteEnBaseDeDatos.setPassword(cliente.getPassword());
         personaEnBaseDeDatos.setNombre(cliente.getPersona().getNombre());
