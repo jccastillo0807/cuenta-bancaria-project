@@ -37,9 +37,8 @@ public class ClienteUseCase {
 
     public Cliente guardarCliente(Cliente cliente) {
         Boolean validarCamposCliente = validarCliente(cliente);
-        Boolean validarEntidadPersona = validarSiExistePersona(cliente);
 
-        if (validarEntidadPersona && validarCamposCliente) {
+        if (Boolean.TRUE.equals(validarCamposCliente)) {
             Persona personaCreada = personaRepository.save(cliente.getPersona());
             cliente.setPersona(personaCreada);
             return clienteRepository.guardarCliente(cliente);
@@ -49,17 +48,14 @@ public class ClienteUseCase {
     }
 
 
-    public Cliente inactivarCliente(Integer id) {
+    public void inactivarCliente(Integer id) {
         if (id != null) {
             Cliente clienteEncontrado = clienteRepository.encontrarPorId(id);
             if (!Objects.isNull(clienteEncontrado)) {
                 clienteEncontrado.setEstado(ESTADO_INACTIVO);
-                 clienteRepository.guardarCliente(clienteEncontrado);
-                throw new BusinessException(BusinessException.Type.CLIENTE_ELIMINADO_EXITOSAMENTE);
+                clienteRepository.guardarCliente(clienteEncontrado);
             }
-            throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
         }
-        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
     }
 
     public Cliente actualizarCliente(Integer id, Cliente cliente) {
@@ -68,7 +64,7 @@ public class ClienteUseCase {
         Boolean validarEntidadPersona = validarSiExistePersona(cliente);
         if (validarEntidadPersona && validarCamposCliente) {
             Cliente clienteEnBaseDeDatos = clienteRepository.encontrarPorId(id);
-            Persona personaEnBaseDeDatos = personaRepository.findById(cliente.getPersona().getId());
+            Persona personaEnBaseDeDatos = personaRepository.encontrarPersonaPorId(cliente.getPersona().getId());
 
             if (Objects.isNull(clienteEnBaseDeDatos)) {
                 throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
@@ -87,11 +83,14 @@ public class ClienteUseCase {
     }
 
     private Boolean validarSiExistePersona(Cliente cliente) {
-        Persona existePersona = personaRepository.findById(cliente.getPersona().getId());
-        if (Objects.nonNull(existePersona)) {
-            return true;
-        } else {
-            throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
+        if (cliente.getPersona().getId() != null) {
+            Persona existePersona = personaRepository.encontrarPersonaPorId(cliente.getPersona().getId());
+            if (Objects.nonNull(existePersona)) {
+                return true;
+            } else {
+                throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
+            }
         }
+        throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
     }
 }

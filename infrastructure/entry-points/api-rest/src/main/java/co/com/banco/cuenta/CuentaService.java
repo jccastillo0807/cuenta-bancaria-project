@@ -37,6 +37,7 @@ public class CuentaService {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void eliminarCuenta(@PathVariable Integer id) {
         cuentaUseCase.eliminarCuenta(id);
     }

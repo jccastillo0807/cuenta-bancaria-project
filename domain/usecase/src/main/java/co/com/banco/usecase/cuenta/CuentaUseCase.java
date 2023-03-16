@@ -54,12 +54,8 @@ public class CuentaUseCase {
             if (!Objects.isNull(cuentaEncontrada)) {
                 cuentaEncontrada.setEstado(INACTIVO);
                 cuentaRepository.guardarCuenta(cuentaEncontrada);
-                throw new BusinessException(BusinessException.Type.CUENTA_ELIMINADA_EXITOSAMENTE);
-            } else {
-                throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
             }
         }
-        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
     }
 
     public Cuenta actualizarCuenta(Integer id, Cuenta cuenta) {
@@ -78,7 +74,7 @@ public class CuentaUseCase {
     }
 
     private Boolean validarSiExisteClienteYPersona(Cuenta cuenta) {
-        Persona existePersona = personaRepository.findById(cuenta.getCliente().getPersona().getId());
+        Persona existePersona = personaRepository.encontrarPersonaPorId(cuenta.getCliente().getPersona().getId());
         Cliente existeCliente = clienteRepository.encontrarPorId(cuenta.getCliente().getId());
         if (Objects.nonNull(existePersona)) {
             if (Objects.nonNull(existeCliente)) {
