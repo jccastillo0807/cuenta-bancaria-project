@@ -11,7 +11,13 @@ public class BusinessException extends ApplicationException {
         ERROR_CAMPO_NULL("Se detecto un campo vacio al validar el cuerpo de la solicitud. ¡Por favor revisar!"),
         ERROR_BASE_DATOS("Error en base de datos"),
         SALDO_INFERIOR_CERO("Saldo no disponible"),
-        CUENTA_NO_ENCONTRADA("La cuenta NO EXISTE!"), ;
+        CUENTA_NO_ENCONTRADA("La cuenta NO EXISTE!"),
+        ERROR_CAMPO_NULL_CUENTA("Se detecto un campo vacio, por favor validar los datos de la cuenta"),
+        ERROR_CAMPO_NULL_CLIENTE("Se detecto un campo vacio, por favor validar los datos del cliente"),
+        ERROR_CAMPO_NULL_MOVIMIENTO("Se detecto un campo vacio, por favor validar los datos del movimiento"),
+        ERROR_CAMPO_NULL_PERSONA("Se detecto un campo vacio, por favor validar los datos de la persona"),
+        ERROR_PERSONA_NO_REGISTRADA("La Persona no se encuentra registrada, registrar primero la persona"),
+        ERROR_CLIENTE_NO_REGISTRADO("El cliente no se encuentra registrado, registrar primero el cliente");
 
         private final String message;
 

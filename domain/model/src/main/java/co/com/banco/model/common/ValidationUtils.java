@@ -1,6 +1,10 @@
 package co.com.banco.model.common;
 
+import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.common.ex.BusinessException;
+import co.com.banco.model.cuenta.Cuenta;
+import co.com.banco.model.movimiento.Movimiento;
+import co.com.banco.model.persona.Persona;
 
 import static co.com.banco.model.common.StringUtils.isEmpty;
 import static java.util.Objects.isNull;
@@ -27,5 +31,92 @@ public final class ValidationUtils {
             }
         }
         return required;
+    }
+
+    public static Boolean validarPersona(Persona persona){
+        /*if  (persona.getId() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+        }*/
+        if (StringUtils.isEmpty(persona.getNumeroDocumento())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+        }
+        if (StringUtils.isEmpty(persona.getTipoDocumento())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+        }
+        if (StringUtils.isEmpty(persona.getNombre())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+        }
+        if (StringUtils.isEmpty(persona.getApellido())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+        }
+        if (StringUtils.isEmpty(persona.getDireccion())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+        }
+        if (StringUtils.isEmpty(persona.getTelefono())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+        }
+        return true;
+    }
+
+    public static Boolean validarCliente(Cliente cliente){
+       /* if  (cliente.getId() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
+        }*/
+        if (StringUtils.isEmpty(cliente.getPassword())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
+        }
+        if (StringUtils.isEmpty(cliente.getUsuario())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
+        }
+        if (StringUtils.isEmpty(cliente.getEstado())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
+        }
+        if (!validarPersona(cliente.getPersona())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
+        }
+        return true;
+    }
+
+    public static Boolean validarCuenta(Cuenta cuenta){
+       /* if (cuenta.getId() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
+        }*/
+        if (StringUtils.isEmpty(cuenta.getNumeroCuenta())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
+        }
+        if (StringUtils.isEmpty(cuenta.getTipoCuenta())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
+        }
+        if (cuenta.getSaldoInicial() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
+        }
+        if (StringUtils.isEmpty(cuenta.getEstado())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
+        }
+        if (!validarCliente(cuenta.getCliente())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
+        }
+
+        return true;
+    }
+
+    public static Boolean validarMovimiento(Movimiento movimiento){
+        /*if (movimiento.getId() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
+        }*/
+        if (movimiento.getFechaMovimiento() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
+        }
+        if (movimiento.getValorMovimiento() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
+        }
+        if (movimiento.getSaldo() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
+        }
+        if (!validarCuenta(movimiento.getCuenta())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
+        }
+
+        return true;
     }
 }

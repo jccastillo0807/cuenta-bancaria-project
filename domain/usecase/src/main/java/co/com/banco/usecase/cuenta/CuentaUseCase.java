@@ -1,19 +1,27 @@
 package co.com.banco.usecase.cuenta;
 
-import co.com.banco.model.common.StringUtils;
+import co.com.banco.model.cliente.Cliente;
+import co.com.banco.model.cliente.gateways.ClienteRepository;
 import co.com.banco.model.common.ex.BusinessException;
 import co.com.banco.model.cuenta.Cuenta;
 import co.com.banco.model.cuenta.gateways.CuentaRepository;
+import co.com.banco.model.persona.Persona;
+import co.com.banco.model.persona.gateways.PersonaRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Objects;
+
+import static co.com.banco.model.common.ValidationUtils.validarCuenta;
 
 @RequiredArgsConstructor
 public class CuentaUseCase {
 
     public static final String INACTIVO = "INACTIVO";
     private final CuentaRepository cuentaRepository;
+    private final PersonaRepository personaRepository;
+    private final ClienteRepository clienteRepository;
+
 
     public List<Cuenta> obtenerCuentas() {
         return cuentaRepository.encontrarCuentas();
@@ -33,10 +41,11 @@ public class CuentaUseCase {
 
     public Cuenta guardarCuenta(Cuenta cuenta) {
         Boolean validacionCamposCuenta = validarCuenta(cuenta);
-        if (validacionCamposCuenta) {
-            return cuentaRepository.guardarCuenta(cuenta);
+        Boolean validarEntidadClienteYPersona = validarSiExisteClienteYPersona(cuenta);
+        if (validacionCamposCuenta &&validarEntidadClienteYPersona) {
+                return cuentaRepository.guardarCuenta(cuenta);
         }
-        throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL);
+        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
     }
 
     public void eliminarCuenta(Integer id) {
@@ -67,22 +76,18 @@ public class CuentaUseCase {
         throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
     }
 
-    private Boolean validarCuenta(Cuenta cuenta) {
-        if (cuenta.getId() == null) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL);
+    private Boolean validarSiExisteClienteYPersona(Cuenta cuenta){
+        Persona existePersona = personaRepository.findById(cuenta.getCliente().getPersona().getId());
+        Cliente existeCliente = clienteRepository.encontrarPorId(cuenta.getCliente().getId());
+        if (Objects.nonNull(existePersona)){
+            if ( Objects.nonNull(existeCliente)) {
+                return true;
+            }else {
+                throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
+            }
+        } else {
+            throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
         }
-        if (StringUtils.isEmpty(cuenta.getNumeroCuenta())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL);
-        }
-        if (StringUtils.isEmpty(cuenta.getTipoCuenta())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL);
-        }
-        if (cuenta.getSaldoInicial() == null) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL);
-        }
-        if (StringUtils.isEmpty(cuenta.getEstado())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL);
-        }
-        return true;
     }
+    
 }
