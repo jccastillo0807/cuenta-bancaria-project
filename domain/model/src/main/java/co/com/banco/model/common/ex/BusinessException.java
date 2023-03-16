@@ -17,7 +17,9 @@ public class BusinessException extends ApplicationException {
         ERROR_CAMPO_NULL_MOVIMIENTO("Se detecto un campo vacio, por favor validar los datos del movimiento"),
         ERROR_CAMPO_NULL_PERSONA("Se detecto un campo vacio, por favor validar los datos de la persona"),
         ERROR_PERSONA_NO_REGISTRADA("La Persona no se encuentra registrada, registrar primero la persona"),
-        ERROR_CLIENTE_NO_REGISTRADO("El cliente no se encuentra registrado, registrar primero el cliente");
+        ERROR_CLIENTE_NO_REGISTRADO("El cliente no se encuentra registrado, registrar primero el cliente"),
+        CUENTA_ELIMINADA_EXITOSAMENTE("Cuenta eliminada exitosamente."),
+        CLIENTE_ELIMINADO_EXITOSAMENTE("Cliente eliminado exitosamente.");
 
         private final String message;
 

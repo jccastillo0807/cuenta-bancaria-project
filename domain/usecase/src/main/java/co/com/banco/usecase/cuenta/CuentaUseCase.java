@@ -42,8 +42,8 @@ public class CuentaUseCase {
     public Cuenta guardarCuenta(Cuenta cuenta) {
         Boolean validacionCamposCuenta = validarCuenta(cuenta);
         Boolean validarEntidadClienteYPersona = validarSiExisteClienteYPersona(cuenta);
-        if (validacionCamposCuenta &&validarEntidadClienteYPersona) {
-                return cuentaRepository.guardarCuenta(cuenta);
+        if (validacionCamposCuenta && validarEntidadClienteYPersona) {
+            return cuentaRepository.guardarCuenta(cuenta);
         }
         throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
     }
@@ -54,6 +54,7 @@ public class CuentaUseCase {
             if (!Objects.isNull(cuentaEncontrada)) {
                 cuentaEncontrada.setEstado(INACTIVO);
                 cuentaRepository.guardarCuenta(cuentaEncontrada);
+                throw new BusinessException(BusinessException.Type.CUENTA_ELIMINADA_EXITOSAMENTE);
             } else {
                 throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
             }
@@ -76,18 +77,18 @@ public class CuentaUseCase {
         throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
     }
 
-    private Boolean validarSiExisteClienteYPersona(Cuenta cuenta){
+    private Boolean validarSiExisteClienteYPersona(Cuenta cuenta) {
         Persona existePersona = personaRepository.findById(cuenta.getCliente().getPersona().getId());
         Cliente existeCliente = clienteRepository.encontrarPorId(cuenta.getCliente().getId());
-        if (Objects.nonNull(existePersona)){
-            if ( Objects.nonNull(existeCliente)) {
+        if (Objects.nonNull(existePersona)) {
+            if (Objects.nonNull(existeCliente)) {
                 return true;
-            }else {
+            } else {
                 throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
             }
         } else {
             throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
         }
     }
-    
+
 }
