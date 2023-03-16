@@ -8,6 +8,7 @@ import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,5 +39,13 @@ public class MovimientoRepositoryAdapter extends AdapterOperations<Movimiento, M
     public Movimiento crearMovimiento(Movimiento movimiento) {
         MovimientoData movimientoData = DataMapper.convertirMovimientoAMovimientoData(movimiento);
         return DataMapper.convertirMovimientoDataAMovimiento(repository.save(movimientoData));
+    }
+
+    @Override
+    public List<Movimiento> generarReporteEntreFechas(Date inicio, Date fin) {
+        /*List<MovimientoData> listaMovimientoData =
+                repository.findByFechaMovimientoBetween(inicio.toString(),fin.toString());
+        */
+        return DataMapper.converitirListaMovimientosDataAListaMovimiento(repository.findByFechaMovimientoBetween(inicio, fin));
     }
 }
