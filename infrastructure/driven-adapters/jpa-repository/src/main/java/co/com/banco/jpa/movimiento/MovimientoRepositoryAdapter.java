@@ -43,9 +43,6 @@ public class MovimientoRepositoryAdapter extends AdapterOperations<Movimiento, M
 
     @Override
     public List<Movimiento> generarReporteEntreFechas(Date inicio, Date fin) {
-        /*List<MovimientoData> listaMovimientoData =
-                repository.findByFechaMovimientoBetween(inicio.toString(),fin.toString());
-        */
         return DataMapper.converitirListaMovimientosDataAListaMovimiento(repository.findByFechaMovimientoBetween(inicio, fin));
     }
 }

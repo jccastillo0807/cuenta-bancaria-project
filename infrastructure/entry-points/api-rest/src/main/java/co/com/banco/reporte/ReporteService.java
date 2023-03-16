@@ -1,5 +1,6 @@
 package co.com.banco.reporte;
 
+import co.com.banco.DTOMapper;
 import co.com.banco.reporte.dto.ReporteDTO;
 import co.com.banco.usecase.movimiento.MovimientoUseCase;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class ReporteService {
 
     @GetMapping("/between")
     public List<ReporteDTO> encontrar(String inicio, String fin) {
-        return ReporteConverter.listMovimientoAListReporteDTO(
+        return DTOMapper.listMovimientoAListReporteDTO(
                 movimientoUseCase.generarReporteEntreFechas(inicio, fin));
     }
 

@@ -62,7 +62,7 @@ public class MovimientoUseCase {
     private Movimiento aplicarMovimiento(Movimiento movimiento) {
         Movimiento movimientoAplicado = movimiento;
         Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
-        if (movimiento.getTipoMovimiento().toUpperCase().equalsIgnoreCase(DEBITO)) {
+        if (movimiento.getTipoMovimiento().equalsIgnoreCase(DEBITO)) {
             Long saldoDisponible = validarSaldoDisponibleEnCuenta(movimiento.getCuenta().getId(), movimiento.getValorMovimiento());
             if (saldoDisponible > 0L) {
                 movimientoAplicado.setSaldo(cuentaConsultada.getSaldoInicial() - movimiento.getValorMovimiento());
