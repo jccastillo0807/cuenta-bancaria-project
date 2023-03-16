@@ -18,7 +18,7 @@ public class DataMapper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Movimiento convertirMovimientoDataAMovimiento(MovimientoData movimientoData){
+    public static Movimiento convertirMovimientoDataAMovimiento(MovimientoData movimientoData) {
         return Movimiento.builder()
                 .id(movimientoData.getId())
                 .fecha(movimientoData.getFechaMovimiento())
@@ -29,7 +29,7 @@ public class DataMapper {
                 .build();
     }
 
-    public static Cuenta convertirCuentaDataACuenta(CuentaData cuentaData){
+    public static Cuenta convertirCuentaDataACuenta(CuentaData cuentaData) {
         return Cuenta.builder()
                 .id(cuentaData.getId())
                 .numeroCuenta(cuentaData.getNumeroCuenta())
@@ -37,6 +37,17 @@ public class DataMapper {
                 .saldoInicial(cuentaData.getSaldoInicial())
                 .estado(cuentaData.getEstado())
                 .cliente(convertirClienteDataACliente(cuentaData.getClienteData()))
+                .build();
+    }
+
+    public static CuentaData convertirCuentaACuentaData(Cuenta cuenta) {
+        return CuentaData.builder()
+                .id(cuenta.getId())
+                .numeroCuenta(cuenta.getNumeroCuenta())
+                .tipoCuenta(cuenta.getTipoCuenta())
+                .saldoInicial(cuenta.getSaldoInicial())
+                .estado(cuenta.getEstado())
+                .clienteData(convertirClienteAClienteData(cuenta.getCliente()))
                 .build();
     }
 
@@ -49,6 +60,18 @@ public class DataMapper {
                 .estado(clienteData.getEstado())
 //                .cuentaDataList(clienteData.getCuentaDataList())
                 .persona(convertirPersonaDataAPersona(clienteData.getPersonaData()))
+                .build();
+    }
+
+    public static ClienteData convertirClienteAClienteData(Cliente cliente) {
+        return ClienteData.builder()
+                .id(cliente.getId())
+                .estado(cliente.getEstado())
+                .password(cliente.getPassword())
+                .usuario(cliente.getUsuario())
+                .password(cliente.getPassword())
+//                .cuentaDataList(clienteData.getCuentaDataList())
+                .personaData(convertirPersonaAPersonaData(cliente.getPersona()))
                 .build();
     }
 
@@ -77,6 +100,7 @@ public class DataMapper {
                 .telefono(persona.getTelefono())
                 .build();
     }
+
     public static List<Movimiento> converitirListaMovimientosDataAListaMovimiento(Iterable<MovimientoData> movimientoDataIterable) {
         List<Movimiento> listaMovimientos = new ArrayList<>();
         movimientoDataIterable.forEach(
@@ -98,15 +122,15 @@ public class DataMapper {
     }
 
 
-    public static ClienteData convertirClienteAClienteData(Cliente cliente) {
-       return ClienteData.builder()
-               .id(cliente.getId())
-               .estado(cliente.getEstado())
-               .password(cliente.getPassword())
-               .usuario(cliente.getUsuario())
-               .password(cliente.getPassword())
-//                .cuentaDataList(clienteData.getCuentaDataList())
-               .personaData(convertirPersonaAPersonaData(cliente.getPersona()))
-               .build();
+    public static List<Cuenta> converitirListaCuentasDataAListaCuentas(Iterable<CuentaData> cuentasDataIterable) {
+        List<Cuenta> listaCuentas = new ArrayList<>();
+        cuentasDataIterable.forEach(
+                cuentaData -> listaCuentas.add(
+                        convertirCuentaDataACuenta(cuentaData)
+                )
+        );
+        return listaCuentas;
     }
+
+
 }

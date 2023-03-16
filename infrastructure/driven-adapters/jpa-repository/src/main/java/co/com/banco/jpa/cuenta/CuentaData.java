@@ -31,8 +31,8 @@ public class CuentaData {
     @Column(name = "tipo_cuenta")
     private String tipoCuenta;
 
-    @NotEmpty
-    @Column(name = "saldo_actual")
+
+    @Column(name = "saldo_actual", nullable = false)
     private Long saldoInicial;
 
     @NotEmpty
