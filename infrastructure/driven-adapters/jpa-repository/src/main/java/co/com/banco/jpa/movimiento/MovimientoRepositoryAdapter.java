@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class MovimientoRepositoryAdapter extends AdapterOperations<Movimiento, MovimientoData, Integer, MovimientoDataRepository>
-implements MovimientoRepository {
+        implements MovimientoRepository {
 
     @Autowired
     public MovimientoRepositoryAdapter(MovimientoDataRepository repository, ObjectMapper mapper) {
@@ -26,9 +27,11 @@ implements MovimientoRepository {
 
     @Override
     public Movimiento encontrarPorId(Integer id) {
-        return DataMapper.convertirMovimientoDataAMovimiento(
-                repository.findById(id).get()
-        );
+        MovimientoData movimientoData = repository.findById(id).orElse(null);
+        if (Objects.isNull(movimientoData)) {
+            return null;
+        }
+        return DataMapper.convertirMovimientoDataAMovimiento(movimientoData);
     }
 
     @Override

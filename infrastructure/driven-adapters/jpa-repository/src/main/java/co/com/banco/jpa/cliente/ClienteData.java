@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 
@@ -29,7 +30,8 @@ public class ClienteData {
     private String password;
 
     @NotEmpty
-    @Column(name = "usuario")
+    @Size(min = 5, max = 25)
+    @Column(name = "usuario", unique = true)
     private String usuario;
 
     @NotEmpty

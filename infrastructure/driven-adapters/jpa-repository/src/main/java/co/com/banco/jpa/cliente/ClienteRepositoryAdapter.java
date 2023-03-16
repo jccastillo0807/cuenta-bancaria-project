@@ -31,7 +31,7 @@ public class ClienteRepositoryAdapter extends AdapterOperations<Cliente, Cliente
         if (Objects.isNull(clienteData)) {
             return null;
         }
-        return DataMapper.convertirClienteDataACliente(repository.findById(id).get());
+        return DataMapper.convertirClienteDataACliente(clienteData);
     }
 
     @Override

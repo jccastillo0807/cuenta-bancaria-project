@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class CuentaRepositoryAdapter extends AdapterOperations<Cuenta, CuentaData, Integer, CuentaDataRepository>
@@ -26,7 +27,11 @@ public class CuentaRepositoryAdapter extends AdapterOperations<Cuenta, CuentaDat
 
     @Override
     public Cuenta encontrarCuentaPorId(Integer id) {
-        return DataMapper.convertirCuentaDataACuenta(repository.findById(id).get());
+        CuentaData cuentaData = repository.findById(id).orElse(null);
+        if (Objects.isNull(cuentaData)) {
+            return null;
+        }
+        return DataMapper.convertirCuentaDataACuenta(cuentaData);
     }
 
     @Override
