@@ -14,7 +14,7 @@ public class MovimientoConverter {
     public static MovimientoDTO movimientoAMovimientoDTO(Movimiento movimiento) {
         MovimientoDTO movimientoDTO = new MovimientoDTO();
         movimientoDTO.setId(movimiento.getId());
-        movimientoDTO.setFecha(movimiento.getFecha());
+        movimientoDTO.setFecha(movimiento.getFechaMovimiento());
         movimientoDTO.setTipoMovimiento(movimiento.getTipoMovimiento());
         movimientoDTO.setValorMovimiento(movimiento.getValorMovimiento());
         movimientoDTO.setSaldo(movimiento.getSaldo());

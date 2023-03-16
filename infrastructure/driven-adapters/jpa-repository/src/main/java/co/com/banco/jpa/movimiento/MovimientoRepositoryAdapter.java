@@ -30,4 +30,10 @@ implements MovimientoRepository {
                 repository.findById(id).get()
         );
     }
+
+    @Override
+    public Movimiento crearMovimiento(Movimiento movimiento) {
+        MovimientoData movimientoData = DataMapper.convertirMovimientoAMovimientoData(movimiento);
+        return DataMapper.convertirMovimientoDataAMovimiento(repository.save(movimientoData));
+    }
 }

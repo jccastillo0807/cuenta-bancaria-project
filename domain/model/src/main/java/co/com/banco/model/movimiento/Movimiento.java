@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder(toBuilder = true)
 public class Movimiento {
     private Integer id;
-    private Date fecha;
+    private Date fechaMovimiento;
     private String tipoMovimiento;
     private Long valorMovimiento;
     private Long saldo;

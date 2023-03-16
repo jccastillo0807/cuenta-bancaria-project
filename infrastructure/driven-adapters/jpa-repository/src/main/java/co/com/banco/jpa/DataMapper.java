@@ -21,11 +21,22 @@ public class DataMapper {
     public static Movimiento convertirMovimientoDataAMovimiento(MovimientoData movimientoData) {
         return Movimiento.builder()
                 .id(movimientoData.getId())
-                .fecha(movimientoData.getFechaMovimiento())
+                .fechaMovimiento(movimientoData.getFechaMovimiento())
                 .tipoMovimiento(movimientoData.getTipoMovimiento())
                 .valorMovimiento(movimientoData.getValorMovimiento())
                 .saldo(movimientoData.getSaldo())
                 .cuenta(convertirCuentaDataACuenta(movimientoData.getCuentaData()))
+                .build();
+    }
+
+    public static MovimientoData convertirMovimientoAMovimientoData(Movimiento movimiento) {
+        return MovimientoData.builder()
+                .id(movimiento.getId())
+                .fechaMovimiento(movimiento.getFechaMovimiento())
+                .tipoMovimiento(movimiento.getTipoMovimiento())
+                .valorMovimiento(movimiento.getValorMovimiento())
+                .saldo(movimiento.getSaldo())
+                .cuentaData(convertirCuentaACuentaData(movimiento.getCuenta()))
                 .build();
     }
 
@@ -37,6 +48,11 @@ public class DataMapper {
                 .saldoInicial(cuentaData.getSaldoInicial())
                 .estado(cuentaData.getEstado())
                 .cliente(convertirClienteDataACliente(cuentaData.getClienteData()))
+                /*.listaMovimientos(
+                        cuentaData.getMovimientoDataList() != null ?
+                                converitirListaMovimientosDataAListaMovimiento(cuentaData.getMovimientoDataList()) :
+                                new ArrayList<>()
+                )*/
                 .build();
     }
 

@@ -22,7 +22,7 @@ INSERT INTO t_cuentas (estado_cuenta, numero_cuenta, saldo_actual, tipo_cuenta, 
 --TABLA MOVIMIENTOS
 INSERT INTO t_movimientos (fecha_movimiento, saldo, tipo_movimiento, valor_movimiento, id_cuenta) VALUES ('2023-01-01', '100000', 'DEBITO', '50000', 1);
 INSERT INTO t_movimientos (fecha_movimiento, saldo, tipo_movimiento, valor_movimiento, id_cuenta) VALUES ('2023-02-01', '100000', 'CREDITO', '50000', 2);
-INSERT INTO t_movimientos (fecha_movimiento, saldo, tipo_movimiento, valor_movimiento, id_cuenta) VALUES ('2023-03-01', '1000000', 'DEBITO', '50000', 3);
+INSERT INTO t_movimientos (fecha_movimiento, saldo, tipo_movimiento, valor_movimiento, id_cuenta) VALUES ('2023-03-01', '1000000', 'DEBITO', -50000, 3);
 INSERT INTO t_movimientos (fecha_movimiento, saldo, tipo_movimiento, valor_movimiento, id_cuenta) VALUES ('2023-01-02', '20000000', 'CREDITO', '50000', 4);
 INSERT INTO t_movimientos (fecha_movimiento, saldo, tipo_movimiento, valor_movimiento, id_cuenta) VALUES ('2023-01-03', '0', 'DEBITO', '50000', 5);
 

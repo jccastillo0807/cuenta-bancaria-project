@@ -9,4 +9,6 @@ public interface MovimientoRepository {
     List<Movimiento> verMovimientos();
 
     Movimiento encontrarPorId(Integer id);
+
+    Movimiento crearMovimiento(Movimiento movimiento);
 }
