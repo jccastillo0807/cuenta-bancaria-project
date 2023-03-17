@@ -121,7 +121,7 @@ public class DTOMapper {
         reporteDTO.setTipo(movimiento.getCuenta().getTipoCuenta());
         reporteDTO.setSaldoInicial(movimiento.getSaldo());
         reporteDTO.setEstado(movimiento.getCuenta().getEstado());
-        reporteDTO.setSaldoDisponible(movimiento.getCuenta().getSaldoInicial());
+        reporteDTO.setSaldoDisponible(movimiento.getSaldo());
 
         return reporteDTO;
     }
