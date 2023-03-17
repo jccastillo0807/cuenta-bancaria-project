@@ -3,11 +3,9 @@ package co.com.banco.usecase.cliente;
 import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.cliente.gateways.ClienteRepository;
 import co.com.banco.model.persona.Persona;
-import co.com.banco.model.persona.gateways.PersonaRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -24,13 +22,7 @@ class ClienteUseCaseTest {
     @Mock
     ClienteRepository clienteRepository;
 
-    @Mock
-    PersonaRepository personaRepository;
-
-    @InjectMocks
-    ClienteUseCase clienteUseCase;
-
-    private Persona persona = Persona.builder()
+    private final Persona persona = Persona.builder()
             .id(1)
             .numeroDocumento("1234567")
             .tipoDocumento("Cedula")
@@ -41,7 +33,7 @@ class ClienteUseCaseTest {
             .telefono("telefono")
             .build();
 
-    private Cliente cliente = Cliente.builder()
+    private final Cliente cliente = Cliente.builder()
             .id(1)
             .password("1234")
             .usuario("test")
@@ -49,15 +41,15 @@ class ClienteUseCaseTest {
             .persona(persona)
             .build();
 
-    private List<Cliente> listaClientes = new ArrayList<>();
+    private final List<Cliente> listaClientes = new ArrayList<>();
 
 
 
     @Test
     void shouldObtenerClientes() {
-        when(clienteRepository.encontrarClientes())
+        when(clienteRepository.encontrarClientes(any()))
                 .thenReturn(listaClientes);
-        List<Cliente> listaParcial = clienteRepository.encontrarClientes();
+        List<Cliente> listaParcial = clienteRepository.encontrarClientes(any());
         Assertions.assertThat(listaParcial).isNotNull();
 
     }
@@ -76,12 +68,5 @@ class ClienteUseCaseTest {
         Assertions.assertThat(clienteEncontrado).isInstanceOf(Cliente.class);
     }
 
-    @Test
-    void inactivarCliente() {
-    }
-
-    @Test
-    void actualizarCliente() {
-    }
 }
 
