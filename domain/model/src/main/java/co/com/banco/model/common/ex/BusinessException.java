@@ -7,8 +7,6 @@ public class BusinessException extends ApplicationException {
     private static final long serialVersionUID = 1L;
 
     public enum Type {
-        INVALID_TODO_INITIAL_DATA("Invalid TODO initial data"),
-        ERROR_CAMPO_NULL("Se detecto un campo vacio al validar el cuerpo de la solicitud. ¡Por favor revisar!"),
         ERROR_BASE_DATOS("Error en base de datos"),
         SALDO_INFERIOR_CERO("Saldo no disponible"),
         CUENTA_NO_ENCONTRADA("La cuenta NO EXISTE!"),
@@ -21,7 +19,9 @@ public class BusinessException extends ApplicationException {
         MOVIMIENTO_NO_ENCONTRADO("Movimiento Bancario No Encontrado."),
         ERROR_CUENTA_NO_REGISTRADO("La Cuenta no se encuentra registrada, registrar primero la cuenta."),
         PERSONA_EXISTE("La persona ya se encuentra registrada."),
-        CUENTA_YA_EXISTE("La cuenta ya se encuentra registrada.");
+        CUENTA_YA_EXISTE("La cuenta ya se encuentra registrada."),
+        FORMATO_FECHA_INVALID("Formato de fecha invalido, formato requerido: yyyy-MM-dd"),
+        FECHA_INICIAL_MAYOR("La fecha inicial no debe ser posterior a la fecha final.");
 
         private final String message;
 

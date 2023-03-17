@@ -121,7 +121,11 @@ public class MovimientoUseCase {
             fechaInicio = formatter.parse(inicio);
             fechaFinal = formatter.parse(fin);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new BusinessException(BusinessException.Type.FORMATO_FECHA_INVALID);
+        }
+
+        if (fechaInicio.after(fechaFinal)) {
+            throw new BusinessException(BusinessException.Type.FECHA_INICIAL_MAYOR);
         }
 
         return movimientoRepository.generarReporteEntreFechas(fechaInicio, fechaFinal);

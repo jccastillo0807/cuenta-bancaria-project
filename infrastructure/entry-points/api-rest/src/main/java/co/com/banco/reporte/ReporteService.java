@@ -19,7 +19,7 @@ public class ReporteService {
 
     private final MovimientoUseCase movimientoUseCase;
 
-    @GetMapping("/between")
+    @GetMapping
     public List<ReporteDTO> encontrar(String inicio, String fin) {
         return DTOMapper.listMovimientoAListReporteDTO(
                 movimientoUseCase.generarReporteEntreFechas(inicio, fin));

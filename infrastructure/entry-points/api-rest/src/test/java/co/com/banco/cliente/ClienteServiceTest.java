@@ -67,7 +67,6 @@ class ClienteServiceTest {
     void shouldEncontrarClientePorId() {
         when(clienteService.encontrarClientePorId(any())).thenReturn(cliente);
         Cliente clienteParcial = clienteService.encontrarClientePorId(any());
-        Assertions.assertThat(clienteParcial).isNotNull();
         Assertions.assertThat(clienteParcial).isInstanceOf(Cliente.class);
     }
 
@@ -75,7 +74,6 @@ class ClienteServiceTest {
     void shouldCrearCliente() {
         when(clienteService.crearCliente(any())).thenReturn(cliente);
         Cliente clienteParcial = clienteService.crearCliente(any());
-        Assertions.assertThat(clienteParcial).isNotNull();
         Assertions.assertThat(clienteParcial).isInstanceOf(Cliente.class);
     }
 
@@ -91,7 +89,6 @@ class ClienteServiceTest {
     void shouldEditarCliente() {
         when(clienteService.editarCliente(any(),any())).thenReturn(cliente);
         Cliente clienteParcial = clienteService.editarCliente(any(), any());
-        Assertions.assertThat(clienteParcial).isNotNull();
         Assertions.assertThat(clienteParcial).isInstanceOf(Cliente.class);
     }
 }
