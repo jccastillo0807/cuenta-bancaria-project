@@ -19,7 +19,7 @@ public class DTOMapper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static PersonaDTO convertirPersonaaPersonaDTO(Persona persona) {
+    public static PersonaDTO convertirPersonaAPersonaDTO(Persona persona) {
         PersonaDTO personaDTO = new PersonaDTO();
         personaDTO.setId(persona.getId());
         personaDTO.setNumeroDocumento(persona.getNumeroDocumento());
@@ -32,16 +32,40 @@ public class DTOMapper {
         return personaDTO;
     }
 
+    private static Persona convertirPersonaDTOAPersona(PersonaDTO personaDTO) {
+        return Persona.builder()
+                .id(personaDTO.getId() != null ? personaDTO.getId() : null)
+                .numeroDocumento(personaDTO.getNumeroDocumento())
+                .tipoDocumento(personaDTO.getTipoDocumento())
+                .nombre(personaDTO.getNombre())
+                .apellido(personaDTO.getApellido())
+                .direccion(personaDTO.getDireccion())
+                .telefono(personaDTO.getTelefono())
+                .genero(personaDTO.getGenero())
+                .build();
+    }
+
     public static ClienteDTO convertirClienteAClienteDTO(Cliente cliente) {
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setId(cliente.getId());
         clienteDTO.setPassword(cliente.getPassword());
         clienteDTO.setUsuario(cliente.getUsuario());
         clienteDTO.setEstado(cliente.getEstado());
-        clienteDTO.setPersona(convertirPersonaaPersonaDTO(cliente.getPersona()));
+        clienteDTO.setPersona(convertirPersonaAPersonaDTO(cliente.getPersona()));
 
         return clienteDTO;
     }
+
+    private static Cliente convertirClienteDTOACliente(ClienteDTO clienteDTO) {
+        return Cliente.builder()
+                .id(clienteDTO.getId() != null ? clienteDTO.getId() : null)
+                .password(clienteDTO.getPassword())
+                .usuario(clienteDTO.getUsuario())
+                .estado(clienteDTO.getEstado())
+                .persona(convertirPersonaDTOAPersona(clienteDTO.getPersona()))
+                .build();
+    }
+
 
     public static ClienteReporteDTO convertirClienteaClienteReporteDTO(Cliente cliente) {
         ClienteReporteDTO clienteReporteDTO = new ClienteReporteDTO();
@@ -63,6 +87,19 @@ public class DTOMapper {
         cuentaDTO.setCliente(convertirClienteAClienteDTO(cuenta.getCliente()));
         return cuentaDTO;
     }
+
+    public static Cuenta convertirCuentaTOACuenta(CuentaDTO cuentaDTO) {
+        return Cuenta.builder()
+                .id(cuentaDTO.getId() != null ? cuentaDTO.getId() : null)
+                .numeroCuenta(cuentaDTO.getNumeroCuenta())
+                .numeroCuenta(cuentaDTO.getNumeroCuenta())
+                .tipoCuenta(cuentaDTO.getTipoCuenta())
+                .saldoInicial(cuentaDTO.getSaldoInicial())
+                .estado(cuentaDTO.getEstado())
+                .cliente(convertirClienteDTOACliente(cuentaDTO.getCliente()))
+                .build();
+    }
+
 
     public static MovimientoDTO movimientoAMovimientoDTO(Movimiento movimiento) {
         MovimientoDTO movimientoDTO = new MovimientoDTO();

@@ -47,10 +47,10 @@ class ClienteServiceTest {
             .estado("estado_test")
             .persona(persona)
             .build();
-    private ClienteDTO clienteDTO = new ClienteDTO();
+    private final ClienteDTO clienteDTO = new ClienteDTO();
     PersonaDTO personaDTO = new PersonaDTO();
 
-    final List<ClienteDTO> listaClienteReporteDTOS = new ArrayList<>();
+    final List<Cliente> listaCliente = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -75,7 +75,7 @@ class ClienteServiceTest {
 
     @Test
     void shouldVerTodosLosClientes() {
-        when(clienteService.verTodosLosClientes()).thenReturn(listaClienteReporteDTOS);
+        when(clienteUseCase.obtenerClientes()).thenReturn(listaCliente);
         List<Cliente> listaParcial = clienteUseCase.obtenerClientes();
         Assertions.assertThat(listaParcial).isNotNull();
     }
