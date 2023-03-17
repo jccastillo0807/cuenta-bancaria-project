@@ -7,10 +7,11 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
-public class ClienteDTO   implements Serializable {
-    private Integer id;
-    private String password;
-    private String usuario;
+public class ClienteReporteDTO implements Serializable {
+    private String nombres;
+    private String direccion;
+    private String telefono;
+    private String contrasena;
     private String estado;
     private PersonaDTO persona;
     private static final long serialVersionUID = 1L;

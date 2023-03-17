@@ -1,5 +1,6 @@
 package co.com.banco.cliente;
 
+import co.com.banco.cliente.dto.ClienteDTO;
 import co.com.banco.model.cliente.Cliente;
 import co.com.banco.usecase.cliente.ClienteUseCase;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static co.com.banco.DTOMapper.convertirClienteAClienteDTO;
+import static co.com.banco.DTOMapper.listClienteAListaClienteDTO;
 
 @CrossOrigin(
         origins = {"http://localhost:4200"},
@@ -21,20 +25,21 @@ public class ClienteService {
     private final ClienteUseCase clienteUseCase;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Cliente> verTodosLosClientes() {
-        return clienteUseCase.obtenerClientes();
+    public List<ClienteDTO> verTodosLosClientes() {
+        return listClienteAListaClienteDTO(clienteUseCase.obtenerClientes());
     }
 
 
     @GetMapping("/{id}")
-    public Cliente encontrarClientePorId(@PathVariable Integer id) {
-        return clienteUseCase.obtenerClientePorId(id);
+    public ClienteDTO encontrarClientePorId(@PathVariable Integer id) {
+
+        return convertirClienteAClienteDTO(clienteUseCase.obtenerClientePorId(id));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Cliente crearCliente(@RequestBody Cliente cliente) {
-        return clienteUseCase.guardarCliente(cliente);
+    public ClienteDTO crearCliente(@RequestBody Cliente cliente) {
+        return convertirClienteAClienteDTO(clienteUseCase.guardarCliente(cliente));
     }
 
     @DeleteMapping("/{id}")
@@ -45,8 +50,8 @@ public class ClienteService {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente editarCliente(@RequestBody Cliente cliente, @PathVariable Integer id) {
-        return clienteUseCase.actualizarCliente(id, cliente);
+    public ClienteDTO editarCliente(@RequestBody Cliente cliente, @PathVariable Integer id) {
+        return convertirClienteAClienteDTO(clienteUseCase.actualizarCliente(id, cliente));
     }
 
 }

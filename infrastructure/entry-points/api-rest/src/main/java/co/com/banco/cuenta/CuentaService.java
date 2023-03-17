@@ -1,6 +1,6 @@
 package co.com.banco.cuenta;
 
-import co.com.banco.model.cuenta.Cuenta;
+import co.com.banco.cuenta.dto.CuentaDTO;
 import co.com.banco.usecase.cuenta.CuentaUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static co.com.banco.DTOMapper.*;
 
 @CrossOrigin(
         origins = {"http://localhost:4200"},
@@ -20,20 +22,20 @@ public class CuentaService {
     private final CuentaUseCase cuentaUseCase;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Cuenta> verTodosLasCuentas() {
-        return cuentaUseCase.obtenerCuentas();
+    public List<CuentaDTO> verTodosLasCuentas() {
+        return listCuentaAListaCuentaDTO(cuentaUseCase.obtenerCuentas());
     }
 
 
     @GetMapping("/{id}")
-    public Cuenta encontrarCuentaPorId(@PathVariable Integer id) {
-        return cuentaUseCase.obtenerCuentaPorId(id);
+    public CuentaDTO encontrarCuentaPorId(@PathVariable Integer id) {
+        return convertirCuentaACuentaDTO(cuentaUseCase.obtenerCuentaPorId(id));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Cuenta crearCuenta(@RequestBody Cuenta cuenta) {
-        return cuentaUseCase.guardarCuenta(cuenta);
+    public CuentaDTO crearCuenta(@RequestBody CuentaDTO cuenta) {
+        return convertirCuentaACuentaDTO(cuentaUseCase.guardarCuenta(convertirCuentaDTOACuenta(cuenta)));
     }
 
     @DeleteMapping("/{id}")
@@ -43,7 +45,7 @@ public class CuentaService {
     }
 
     @PutMapping("/{id}")
-    public Cuenta editarCuenta(@RequestBody Cuenta cuenta, @PathVariable Integer id) {
-        return cuentaUseCase.actualizarCuenta(id, cuenta);
+    public CuentaDTO editarCuenta(@RequestBody CuentaDTO cuenta, @PathVariable Integer id) {
+        return convertirCuentaACuentaDTO(cuentaUseCase.actualizarCuenta(id, convertirCuentaDTOACuenta(cuenta)));
     }
 }

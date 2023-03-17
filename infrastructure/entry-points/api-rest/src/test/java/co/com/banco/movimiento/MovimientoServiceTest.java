@@ -65,26 +65,25 @@ class MovimientoServiceTest {
             .cuenta(cuenta)
             .build();
 
-
     private final List<Movimiento> listaMovimientos = new ArrayList<>();
 
     @Test
     void shouldVerTodosLosMovimientos() {
-        when(movimientoService.verTodosLosMovimientos()).thenReturn(listaMovimientos);
+        when(movimientoUseCase.obtenerMovimientos()).thenReturn(listaMovimientos);
         List<Movimiento> listaParcial = movimientoUseCase.obtenerMovimientos();
         Assertions.assertThat(listaParcial).isNotNull();
     }
 
     @Test
     void shouldEncontrarPorId() {
-        when(movimientoService.encontrarPorId(any())).thenReturn(movimiento);
+        when(movimientoUseCase.findById(any())).thenReturn(movimiento);
         Movimiento movimientoParcial = movimientoUseCase.findById(any());
         Assertions.assertThat(movimientoParcial).isInstanceOf(Movimiento.class);
     }
 
     @Test
     void shouldCrearMovimiento() {
-        when(movimientoService.crearMovimiento(any())).thenReturn(movimiento);
+        when(movimientoUseCase.guardarMovimiento(any())).thenReturn(movimiento);
         Movimiento movimientoParcial = movimientoUseCase.guardarMovimiento(any());
         Assertions.assertThat(movimientoParcial).isInstanceOf(Movimiento.class);
     }

@@ -1,5 +1,8 @@
 package co.com.banco.cuenta;
 
+import co.com.banco.cliente.dto.ClienteDTO;
+import co.com.banco.cliente.dto.PersonaDTO;
+import co.com.banco.cuenta.dto.CuentaDTO;
 import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.cuenta.Cuenta;
 import co.com.banco.model.persona.Persona;
@@ -58,10 +61,33 @@ class CuentaServiceTest {
             .cliente(cliente)
             .build();
 
-    private final List<Cuenta> listaCuentas = new ArrayList<>();
+    CuentaDTO cuentaDTO = new CuentaDTO();
+    ClienteDTO clienteDTO = new ClienteDTO();
+    PersonaDTO personaDTO = new PersonaDTO();
+
+    private final List<CuentaDTO> listaCuentas = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
+        personaDTO.setId(1);
+        personaDTO.setNumeroDocumento("1234567");
+        personaDTO.setTipoDocumento("qwsdcv");
+        personaDTO.setNombre("test");
+        personaDTO.setApellido("test");
+        personaDTO.setGenero("werfghn");
+        personaDTO.setDireccion("dire");
+        personaDTO.setTelefono("34353487");
+        clienteDTO.setId(1);
+        clienteDTO.setPassword("qwerty");
+        clienteDTO.setUsuario("qwerty");
+        clienteDTO.setEstado("estado");
+        clienteDTO.setPersona(personaDTO);
+        cuentaDTO.setId(1);
+        cuentaDTO.setNumeroCuenta("34567");
+        cuentaDTO.setTipoCuenta("tipo");
+        cuentaDTO.setSaldoInicial(1000L);
+        cuentaDTO.setEstado("qwert");
+        cuentaDTO.setCliente(clienteDTO);
     }
 
     @AfterEach
@@ -77,14 +103,14 @@ class CuentaServiceTest {
 
     @Test
     void shouldEncontrarCuentaPorId() {
-        when(cuentaService.encontrarCuentaPorId(any())).thenReturn(cuenta);
+        when(cuentaUseCase.obtenerCuentaPorId(any())).thenReturn(cuenta);
         Cuenta cuentaParcial = cuentaUseCase.obtenerCuentaPorId(any());
         Assertions.assertThat(cuentaParcial).isInstanceOf(Cuenta.class);
     }
 
     @Test
     void shouldCrearCliente() {
-        when(cuentaService.crearCuenta(any())).thenReturn(cuenta);
+        when(cuentaUseCase.guardarCuenta(any())).thenReturn(cuenta);
         Cuenta cuentaParcial = cuentaUseCase.guardarCuenta(any());
         Assertions.assertThat(cuentaParcial).isInstanceOf(Cuenta.class);
     }
@@ -99,7 +125,7 @@ class CuentaServiceTest {
 
     @Test
     void editarCuenta() {
-        when(cuentaService.editarCuenta(any(),any())).thenReturn(cuenta);
+        when(cuentaUseCase.actualizarCuenta(any(),any())).thenReturn(cuenta);
         Cuenta cuentaParcial = cuentaUseCase.actualizarCuenta(any(), any());
         Assertions.assertThat(cuentaParcial).isNotNull();
         Assertions.assertThat(cuentaParcial).isInstanceOf(Cuenta.class);

@@ -1,6 +1,6 @@
 package co.com.banco.movimiento.dto;
 
-import co.com.banco.model.cliente.Cliente;
+import co.com.banco.cuenta.dto.CuentaDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,10 +11,10 @@ import java.util.Date;
 @NoArgsConstructor
 public class MovimientoDTO implements Serializable {
     private Integer id;
-    private Date fecha;
+    private Date fechaMovimiento;
     private String tipoMovimiento;
     private Long valorMovimiento;
     private Long saldo;
-    private Cliente cliente;
+    private CuentaDTO cuenta;
     private static final long serialVersionUID = 1L;
 }

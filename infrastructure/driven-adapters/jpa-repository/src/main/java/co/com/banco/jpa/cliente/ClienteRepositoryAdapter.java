@@ -21,8 +21,8 @@ public class ClienteRepositoryAdapter extends AdapterOperations<Cliente, Cliente
     }
 
     @Override
-    public List<Cliente> encontrarClientes() {
-        return DataMapper.convertirlistClienteDataAListCliente(repository.findAll());
+    public List<Cliente> encontrarClientes(String estado) {
+        return DataMapper.convertirlistClienteDataAListCliente(repository.findByEstado(estado));
     }
 
     @Override

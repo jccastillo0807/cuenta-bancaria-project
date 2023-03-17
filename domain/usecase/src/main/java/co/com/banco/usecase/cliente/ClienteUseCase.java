@@ -16,11 +16,12 @@ import static co.com.banco.model.common.ValidationUtils.validarCliente;
 public class ClienteUseCase {
 
     public static final String ESTADO_INACTIVO = "INACTIVO";
+    public static final String ESTADO_ACTIVO = "ACTIVO";
     private final ClienteRepository clienteRepository;
     private final PersonaRepository personaRepository;
 
     public List<Cliente> obtenerClientes() {
-        return clienteRepository.encontrarClientes();
+        return clienteRepository.encontrarClientes(ESTADO_ACTIVO);
     }
 
     public Cliente obtenerClientePorId(Integer id) {

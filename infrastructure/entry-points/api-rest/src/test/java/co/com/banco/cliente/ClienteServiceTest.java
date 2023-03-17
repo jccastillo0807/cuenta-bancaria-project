@@ -1,5 +1,7 @@
 package co.com.banco.cliente;
 
+import co.com.banco.cliente.dto.ClienteDTO;
+import co.com.banco.cliente.dto.PersonaDTO;
 import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.persona.Persona;
 import co.com.banco.usecase.cliente.ClienteUseCase;
@@ -45,11 +47,26 @@ class ClienteServiceTest {
             .estado("estado_test")
             .persona(persona)
             .build();
+    private final ClienteDTO clienteDTO = new ClienteDTO();
+    PersonaDTO personaDTO = new PersonaDTO();
 
-    private final List<Cliente> listaClientes = new ArrayList<>();
+    final List<Cliente> listaCliente = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
+        personaDTO.setId(1);
+        personaDTO.setNumeroDocumento("1234567");
+        personaDTO.setTipoDocumento("qwsdcv");
+        personaDTO.setNombre("test");
+        personaDTO.setApellido("test");
+        personaDTO.setGenero("werfghn");
+        personaDTO.setDireccion("dire");
+        personaDTO.setTelefono("34353487");
+        clienteDTO.setId(1);
+        clienteDTO.setPassword("qwerty");
+        clienteDTO.setUsuario("qwerty");
+        clienteDTO.setEstado("estado");
+        clienteDTO.setPersona(personaDTO);
     }
 
     @AfterEach
@@ -58,23 +75,23 @@ class ClienteServiceTest {
 
     @Test
     void shouldVerTodosLosClientes() {
-        when(clienteService.verTodosLosClientes()).thenReturn(listaClientes);
+        when(clienteUseCase.obtenerClientes()).thenReturn(listaCliente);
         List<Cliente> listaParcial = clienteUseCase.obtenerClientes();
         Assertions.assertThat(listaParcial).isNotNull();
     }
 
     @Test
     void shouldEncontrarClientePorId() {
-        when(clienteService.encontrarClientePorId(any())).thenReturn(cliente);
-        Cliente clienteParcial = clienteService.encontrarClientePorId(any());
-        Assertions.assertThat(clienteParcial).isInstanceOf(Cliente.class);
+        when(clienteUseCase.obtenerClientePorId(any())).thenReturn(cliente);
+        ClienteDTO clienteParcial = clienteService.encontrarClientePorId(any());
+        Assertions.assertThat(clienteParcial).isInstanceOf(ClienteDTO.class);
     }
 
     @Test
     void shouldCrearCliente() {
-        when(clienteService.crearCliente(any())).thenReturn(cliente);
-        Cliente clienteParcial = clienteService.crearCliente(any());
-        Assertions.assertThat(clienteParcial).isInstanceOf(Cliente.class);
+        when(clienteUseCase.guardarCliente(any())).thenReturn(cliente);
+        ClienteDTO clienteParcial = clienteService.crearCliente(any());
+        Assertions.assertThat(clienteParcial).isInstanceOf(ClienteDTO.class);
     }
 
     @Test
@@ -87,8 +104,8 @@ class ClienteServiceTest {
 
     @Test
     void shouldEditarCliente() {
-        when(clienteService.editarCliente(any(),any())).thenReturn(cliente);
-        Cliente clienteParcial = clienteService.editarCliente(any(), any());
-        Assertions.assertThat(clienteParcial).isInstanceOf(Cliente.class);
+        when(clienteUseCase.actualizarCliente(any(), any())).thenReturn(cliente);
+        ClienteDTO clienteParcial = clienteService.editarCliente(any(), any());
+        Assertions.assertThat(clienteParcial).isInstanceOf(ClienteDTO.class);
     }
 }
