@@ -36,12 +36,16 @@ public class ClienteUseCase {
     }
 
     public Cliente guardarCliente(Cliente cliente) {
+        Persona personaEncontrada = personaRepository.encontrarPorTipoYNumeroDocumento(cliente.getPersona().getTipoDocumento(), cliente.getPersona().getNumeroDocumento());
         Boolean validarCamposCliente = validarCliente(cliente);
 
         if (Boolean.TRUE.equals(validarCamposCliente)) {
-            Persona personaCreada = personaRepository.save(cliente.getPersona());
-            cliente.setPersona(personaCreada);
-            return clienteRepository.guardarCliente(cliente);
+            if (Objects.isNull(personaEncontrada)){
+                Persona personaCreada = personaRepository.save(cliente.getPersona());
+                cliente.setPersona(personaCreada);
+                return clienteRepository.guardarCliente(cliente);
+            }
+            throw new BusinessException(BusinessException.Type.PERSONA_EXISTE);
         }
 
         throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);

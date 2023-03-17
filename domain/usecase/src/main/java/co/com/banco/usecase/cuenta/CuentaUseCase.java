@@ -40,10 +40,14 @@ public class CuentaUseCase {
     }
 
     public Cuenta guardarCuenta(Cuenta cuenta) {
+        Cuenta cuentaEncontrada = cuentaRepository.buscarPorNumeroCuenta(cuenta.getNumeroCuenta());
         Boolean validacionCamposCuenta = validarCuenta(cuenta);
         Boolean validarEntidadClienteYPersona = validarSiExisteClienteYPersona(cuenta);
         if (validacionCamposCuenta && validarEntidadClienteYPersona) {
-            return cuentaRepository.guardarCuenta(cuenta);
+            if (Objects.isNull(cuentaEncontrada)) {
+                return cuentaRepository.guardarCuenta(cuenta);
+            }
+            throw new BusinessException(BusinessException.Type.CUENTA_YA_EXISTE);
         }
         throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
     }

@@ -19,7 +19,9 @@ public class BusinessException extends ApplicationException {
         ERROR_PERSONA_NO_REGISTRADA("La Persona no se encuentra registrada, registrar primero la persona"),
         ERROR_CLIENTE_NO_REGISTRADO("El cliente no se encuentra registrado, registrar primero el cliente"),
         MOVIMIENTO_NO_ENCONTRADO("Movimiento Bancario No Encontrado."),
-        ERROR_CUENTA_NO_REGISTRADO("La Cuenta no se encuentra registrada, registrar primero la cuenta.");
+        ERROR_CUENTA_NO_REGISTRADO("La Cuenta no se encuentra registrada, registrar primero la cuenta."),
+        PERSONA_EXISTE("La persona ya se encuentra registrada."),
+        CUENTA_YA_EXISTE("La cuenta ya se encuentra registrada.");
 
         private final String message;
 

@@ -11,4 +11,5 @@ public interface CuentaRepository {
 
     Cuenta guardarCuenta(Cuenta cuenta);
 
+    Cuenta buscarPorNumeroCuenta(String numeroCuenta);
 }

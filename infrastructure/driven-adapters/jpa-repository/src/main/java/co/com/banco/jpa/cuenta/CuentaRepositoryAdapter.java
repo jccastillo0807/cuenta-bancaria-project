@@ -39,4 +39,13 @@ public class CuentaRepositoryAdapter extends AdapterOperations<Cuenta, CuentaDat
         CuentaData cuentaData = DataMapper.convertirCuentaACuentaData(cuenta);
         return DataMapper.convertirCuentaDataACuenta(repository.save(cuentaData));
     }
+
+    @Override
+    public Cuenta buscarPorNumeroCuenta(String numeroCuenta) {
+        CuentaData cuentaData = repository.findByNumeroCuenta(numeroCuenta);
+        if (Objects.isNull(cuentaData)) {
+            return null;
+        }
+        return DataMapper.convertirCuentaDataACuenta(cuentaData);
+    }
 }

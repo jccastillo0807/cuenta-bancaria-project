@@ -27,4 +27,13 @@ public class PersonaRepositoryAdapter extends AdapterOperations<Persona, Persona
         }
         return DataMapper.convertirPersonaDataAPersona(personaData);
     }
+
+    @Override
+    public Persona encontrarPorTipoYNumeroDocumento(String tipoDocumento, String numeroDocumento) {
+        PersonaData personaData =  repository.findByTipoDocumentoAndNumeroDocumento(tipoDocumento, numeroDocumento);
+        if (Objects.isNull(personaData)) {
+            return null;
+        }
+        return DataMapper.convertirPersonaDataAPersona(personaData);
+    }
 }
