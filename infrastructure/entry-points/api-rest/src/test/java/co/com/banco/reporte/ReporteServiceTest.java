@@ -2,7 +2,7 @@ package co.com.banco.reporte;
 
 import co.com.banco.model.movimiento.Movimiento;
 import co.com.banco.reporte.dto.ReporteDTO;
-import co.com.banco.usecase.movimiento.MovimientoUseCase;
+import co.com.banco.usecase.reporte.ReporteUseCase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class ReporteServiceTest {
     ReporteService reporteService;
 
     @Mock
-    MovimientoUseCase movimientoUseCase;
+    ReporteUseCase reporteUseCase;
 
     static ReporteDTO reporteDTO = new ReporteDTO();
 
@@ -48,7 +48,7 @@ class ReporteServiceTest {
     void shouldGenerarReporte() {
         when(reporteService.generarReporte(any(), any())).thenReturn(listaReporteDTO);
         List<Movimiento> listaParcial =
-                movimientoUseCase.generarReporteEntreFechas(any(), any());
+                reporteUseCase.generarReporteEntreFechas(any(), any());
         Assertions.assertThat(listaParcial).isNotNull();
     }
 }

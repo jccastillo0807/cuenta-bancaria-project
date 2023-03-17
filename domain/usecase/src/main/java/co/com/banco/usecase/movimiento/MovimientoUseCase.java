@@ -11,11 +11,7 @@ import co.com.banco.model.persona.Persona;
 import co.com.banco.model.persona.gateways.PersonaRepository;
 import lombok.RequiredArgsConstructor;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import static co.com.banco.model.common.ValidationUtils.validarMovimiento;
@@ -24,6 +20,7 @@ import static co.com.banco.model.common.ValidationUtils.validarMovimiento;
 public class MovimientoUseCase {
 
     public static final String DEBITO = "DEBITO";
+    public static final String CREDITO = "CREDITO";
     private final MovimientoRepository movimientoRepository;
 
     private final CuentaRepository cuentaRepository;
@@ -71,8 +68,13 @@ public class MovimientoUseCase {
                 throw new BusinessException(BusinessException.Type.SALDO_INFERIOR_CERO);
             }
         } else {
-            movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
-            movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
+            if (movimiento.getTipoMovimiento().equalsIgnoreCase(CREDITO)) {
+                movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
+                movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
+            }else {
+                throw new BusinessException(BusinessException.Type.TIPO_MOVIMIENTO_NO_VALIDO);
+            }
+
         }
         return movimiento;
     }
@@ -107,24 +109,4 @@ public class MovimientoUseCase {
         }
     }
 
-    public List<Movimiento> generarReporteEntreFechas(String  inicio, String fin) {
-        if (inicio != null && fin != null) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            Date fechaInicio;
-            Date fechaFinal;
-            try {
-                fechaInicio = formatter.parse(inicio);
-                fechaFinal = formatter.parse(fin);
-            } catch (ParseException e) {
-                throw new BusinessException(BusinessException.Type.FORMATO_FECHA_INVALID);
-            }
-
-            if (fechaInicio.after(fechaFinal)) {
-                throw new BusinessException(BusinessException.Type.FECHA_INICIAL_MAYOR);
-            }
-
-            return movimientoRepository.generarReporteEntreFechas(fechaInicio, fechaFinal);
-        }
-        throw new BusinessException(BusinessException.Type.FECHA_PARAMETRO_NO_ENCONTRADO);
-    }
 }

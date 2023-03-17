@@ -22,7 +22,8 @@ public class BusinessException extends ApplicationException {
         CUENTA_YA_EXISTE("La cuenta ya se encuentra registrada."),
         FORMATO_FECHA_INVALID("Formato de fecha invalido, formato requerido: yyyy-MM-dd"),
         FECHA_INICIAL_MAYOR("La fecha inicial no debe ser posterior a la fecha final."),
-        FECHA_PARAMETRO_NO_ENCONTRADO("Falta algun parametro para generar reporte. Parametros: inicio=yyyy-MM-dd y fin=yyyy-MM-dd.");
+        FECHA_PARAMETRO_NO_ENCONTRADO("Falta algun parametro para generar reporte. Parametros: inicio=yyyy-MM-dd y fin=yyyy-MM-dd."),
+        TIPO_MOVIMIENTO_NO_VALIDO("Tipo de movimiento Bancario No Valido.");
 
         private final String message;
 

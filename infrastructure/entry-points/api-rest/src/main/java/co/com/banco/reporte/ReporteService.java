@@ -2,7 +2,7 @@ package co.com.banco.reporte;
 
 import co.com.banco.DTOMapper;
 import co.com.banco.reporte.dto.ReporteDTO;
-import co.com.banco.usecase.movimiento.MovimientoUseCase;
+import co.com.banco.usecase.reporte.ReporteUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReporteService {
 
-    private final MovimientoUseCase movimientoUseCase;
+    private final ReporteUseCase reporteUseCase;
 
     @GetMapping
     public List<ReporteDTO> generarReporte(String inicio, String fin) {
         return DTOMapper.listMovimientoAListReporteDTO(
-                movimientoUseCase.generarReporteEntreFechas(inicio, fin));
+                reporteUseCase.generarReporteEntreFechas(inicio, fin));
     }
 
 }
