@@ -48,7 +48,7 @@ public class MovimientoUseCase {
 
     public Movimiento guardarMovimiento(Movimiento movimiento) {
         Boolean validacionCamposMovimiento = validarMovimiento(movimiento);
-        Boolean validacionExistenciaMovimientoClientePersona = MovimientoClientePersona(movimiento);
+        Boolean validacionExistenciaMovimientoClientePersona = movimientoClientePersona(movimiento);
         if (validacionExistenciaMovimientoClientePersona && validacionCamposMovimiento) {
             Movimiento movimientoAplicado = aplicarMovimiento(movimiento);
             Cuenta cuentaConNuevoSaldo = aplicarNuevoSaldoEnCuenta(movimientoAplicado.getCuenta());
@@ -60,30 +60,26 @@ public class MovimientoUseCase {
 
 
     private Movimiento aplicarMovimiento(Movimiento movimiento) {
-        Movimiento movimientoAplicado = movimiento;
         Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
         if (movimiento.getTipoMovimiento().equalsIgnoreCase(DEBITO)) {
             Long saldoDisponible = validarSaldoDisponibleEnCuenta(movimiento.getCuenta().getId(), movimiento.getValorMovimiento());
             if (saldoDisponible > 0L) {
-                movimientoAplicado.setSaldo(cuentaConsultada.getSaldoInicial() - movimiento.getValorMovimiento());
-                movimientoAplicado.getCuenta().setSaldoInicial(movimientoAplicado.getSaldo());
-                movimientoAplicado.setValorMovimiento(movimiento.getValorMovimiento() * -1L);
+                movimiento.setSaldo(cuentaConsultada.getSaldoInicial() - movimiento.getValorMovimiento());
+                movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
+                movimiento.setValorMovimiento(movimiento.getValorMovimiento() * -1L);
             } else {
                 throw new BusinessException(BusinessException.Type.SALDO_INFERIOR_CERO);
             }
         } else {
-            movimientoAplicado.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
-            movimientoAplicado.getCuenta().setSaldoInicial(movimientoAplicado.getSaldo());
+            movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
+            movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
         }
-        return movimientoAplicado;
+        return movimiento;
     }
 
     private Long validarSaldoDisponibleEnCuenta(Integer idCuenta, Long movimientoDebito) {
         Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(idCuenta);
-        if (cuentaConsultada.getSaldoInicial() - movimientoDebito > 0L) {
-            return cuentaConsultada.getSaldoInicial() - movimientoDebito;
-        }
-        return 0L;
+        return Math.max(cuentaConsultada.getSaldoInicial() - movimientoDebito, 0L);
     }
 
     private Cuenta aplicarNuevoSaldoEnCuenta(Cuenta cuenta) {
@@ -92,7 +88,7 @@ public class MovimientoUseCase {
         return cuentaRepository.guardarCuenta(cuentaConNuevoSaldo);
     }
 
-    private Boolean MovimientoClientePersona(Movimiento movimiento) {
+    private Boolean movimientoClientePersona(Movimiento movimiento) {
         Persona existePersona = personaRepository.encontrarPersonaPorId(movimiento.getCuenta().getCliente().getPersona().getId());
         Cliente existeCliente = clienteRepository.encontrarPorId(movimiento.getCuenta().getCliente().getId());
         Cuenta existeCuenta = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());

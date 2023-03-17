@@ -110,6 +110,9 @@ public final class ValidationUtils {
         if (movimiento.getValorMovimiento() == null) {
             throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
         }
+        if (movimiento.getTipoMovimiento() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
+        }
         if (movimiento.getSaldo() == null) {
             throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
         }
