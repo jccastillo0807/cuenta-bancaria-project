@@ -24,7 +24,7 @@ public class CuentaData {
     private Integer id;
 
     @NotEmpty
-    @Column(name = "numero_cuenta")
+    @Column(name = "numero_cuenta", unique = true)
     private String numeroCuenta;
 
     @NotEmpty
