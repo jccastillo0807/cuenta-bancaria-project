@@ -18,13 +18,14 @@ import static co.com.banco.model.common.ValidationUtils.validarCuenta;
 public class CuentaUseCase {
 
     public static final String INACTIVO = "INACTIVO";
+    public static final String ACTIVO = "ACTIVO";
     private final CuentaRepository cuentaRepository;
     private final PersonaRepository personaRepository;
     private final ClienteRepository clienteRepository;
 
 
     public List<Cuenta> obtenerCuentas() {
-        return cuentaRepository.encontrarCuentas();
+        return cuentaRepository.encontrarCuentas(ACTIVO);
     }
 
     public Cuenta obtenerCuentaPorId(Integer id) {

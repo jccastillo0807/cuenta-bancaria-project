@@ -5,7 +5,7 @@ import co.com.banco.model.cuenta.Cuenta;
 import java.util.List;
 
 public interface CuentaRepository {
-    List<Cuenta> encontrarCuentas();
+    List<Cuenta> encontrarCuentas(String estado);
 
     Cuenta encontrarCuentaPorId(Integer id);
 

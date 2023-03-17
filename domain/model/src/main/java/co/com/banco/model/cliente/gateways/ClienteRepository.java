@@ -5,7 +5,7 @@ import co.com.banco.model.cliente.Cliente;
 import java.util.List;
 
 public interface ClienteRepository {
-    List<Cliente> encontrarClientes();
+    List<Cliente> encontrarClientes(String estado);
 
     Cliente encontrarPorId(Integer id);
 

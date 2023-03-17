@@ -21,8 +21,8 @@ public class CuentaRepositoryAdapter extends AdapterOperations<Cuenta, CuentaDat
     }
 
     @Override
-    public List<Cuenta> encontrarCuentas() {
-        return DataMapper.converitirListaCuentasDataAListaCuentas(repository.findAll());
+    public List<Cuenta> encontrarCuentas(String estado) {
+        return DataMapper.converitirListaCuentasDataAListaCuentas(repository.findByEstado(estado));
     }
 
     @Override
