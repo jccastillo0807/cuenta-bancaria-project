@@ -5,7 +5,6 @@ import co.com.banco.model.cliente.gateways.ClienteRepository;
 import co.com.banco.model.persona.Persona;
 import co.com.banco.model.persona.gateways.PersonaRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -51,25 +51,29 @@ class ClienteUseCaseTest {
 
     private List<Cliente> listaClientes = new ArrayList<>();
 
-    @BeforeAll
-    public void setUp() {
-        listaClientes.add(cliente);
-    }
+
 
     @Test
     void shouldObtenerClientes() {
         when(clienteRepository.encontrarClientes())
                 .thenReturn(listaClientes);
-        Assertions.assertThat(listaClientes).isNotNull();
+        List<Cliente> listaParcial = clienteRepository.encontrarClientes();
+        Assertions.assertThat(listaParcial).isNotNull();
 
     }
 
     @Test
     void obtenerClientePorId() {
+        when(clienteRepository.encontrarPorId(any())).thenReturn(cliente);
+        Cliente clienteEncontrado = clienteRepository.encontrarPorId(1);
+        Assertions.assertThat(clienteEncontrado).isInstanceOf(Cliente.class);
     }
 
     @Test
     void guardarCliente() {
+        when(clienteRepository.guardarCliente(any())).thenReturn(cliente);
+        Cliente clienteEncontrado = clienteRepository.guardarCliente(any());
+        Assertions.assertThat(clienteEncontrado).isInstanceOf(Cliente.class);
     }
 
     @Test

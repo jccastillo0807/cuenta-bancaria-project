@@ -32,7 +32,7 @@ public class CuentaService {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Cuenta crearCliente(@RequestBody Cuenta cuenta) {
+    public Cuenta crearCuenta(@RequestBody Cuenta cuenta) {
         return cuentaUseCase.guardarCuenta(cuenta);
     }
 
@@ -41,6 +41,7 @@ public class CuentaService {
     public void eliminarCuenta(@PathVariable Integer id) {
         cuentaUseCase.eliminarCuenta(id);
     }
+
     @PutMapping("/{id}")
     public Cuenta editarCuenta(@RequestBody Cuenta cuenta, @PathVariable Integer id) {
         return cuentaUseCase.actualizarCuenta(id, cuenta);
