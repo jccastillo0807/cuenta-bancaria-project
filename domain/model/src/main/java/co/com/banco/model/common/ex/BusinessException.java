@@ -21,7 +21,8 @@ public class BusinessException extends ApplicationException {
         PERSONA_EXISTE("La persona ya se encuentra registrada."),
         CUENTA_YA_EXISTE("La cuenta ya se encuentra registrada."),
         FORMATO_FECHA_INVALID("Formato de fecha invalido, formato requerido: yyyy-MM-dd"),
-        FECHA_INICIAL_MAYOR("La fecha inicial no debe ser posterior a la fecha final.");
+        FECHA_INICIAL_MAYOR("La fecha inicial no debe ser posterior a la fecha final."),
+        FECHA_PARAMETRO_NO_ENCONTRADO("Falta algun parametro para generar reporte. Parametros: inicio=yyyy-MM-dd y fin=yyyy-MM-dd.");
 
         private final String message;
 

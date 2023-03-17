@@ -83,9 +83,8 @@ public class MovimientoUseCase {
     }
 
     private Cuenta aplicarNuevoSaldoEnCuenta(Cuenta cuenta) {
-        Cuenta cuentaConNuevoSaldo = cuenta;
-        cuentaConNuevoSaldo.setSaldoInicial(cuenta.getSaldoInicial());
-        return cuentaRepository.guardarCuenta(cuentaConNuevoSaldo);
+        cuenta.setSaldoInicial(cuenta.getSaldoInicial());
+        return cuentaRepository.guardarCuenta(cuenta);
     }
 
     private Boolean movimientoClientePersona(Movimiento movimiento) {
@@ -109,21 +108,23 @@ public class MovimientoUseCase {
     }
 
     public List<Movimiento> generarReporteEntreFechas(String  inicio, String fin) {
+        if (inicio != null && fin != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            Date fechaInicio;
+            Date fechaFinal;
+            try {
+                fechaInicio = formatter.parse(inicio);
+                fechaFinal = formatter.parse(fin);
+            } catch (ParseException e) {
+                throw new BusinessException(BusinessException.Type.FORMATO_FECHA_INVALID);
+            }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        Date fechaInicio = null;
-        Date fechaFinal = null;
-        try {
-            fechaInicio = formatter.parse(inicio);
-            fechaFinal = formatter.parse(fin);
-        } catch (ParseException e) {
-            throw new BusinessException(BusinessException.Type.FORMATO_FECHA_INVALID);
+            if (fechaInicio.after(fechaFinal)) {
+                throw new BusinessException(BusinessException.Type.FECHA_INICIAL_MAYOR);
+            }
+
+            return movimientoRepository.generarReporteEntreFechas(fechaInicio, fechaFinal);
         }
-
-        if (fechaInicio.after(fechaFinal)) {
-            throw new BusinessException(BusinessException.Type.FECHA_INICIAL_MAYOR);
-        }
-
-        return movimientoRepository.generarReporteEntreFechas(fechaInicio, fechaFinal);
+        throw new BusinessException(BusinessException.Type.FECHA_PARAMETRO_NO_ENCONTRADO);
     }
 }
