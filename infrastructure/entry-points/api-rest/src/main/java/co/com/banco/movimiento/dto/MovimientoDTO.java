@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class MovimientoDTO implements Serializable {
     private Integer id;
-    private Date fecha;
+    private Date fechaMovimiento;
     private String tipoMovimiento;
     private Long valorMovimiento;
     private Long saldo;

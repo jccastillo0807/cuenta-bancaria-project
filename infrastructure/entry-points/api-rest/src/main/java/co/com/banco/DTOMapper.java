@@ -1,7 +1,6 @@
 package co.com.banco;
 
 import co.com.banco.cliente.dto.ClienteDTO;
-import co.com.banco.cliente.dto.ClienteReporteDTO;
 import co.com.banco.cliente.dto.PersonaDTO;
 import co.com.banco.cuenta.dto.CuentaDTO;
 import co.com.banco.model.cliente.Cliente;
@@ -66,17 +65,6 @@ public class DTOMapper {
                 .build();
     }
 
-
-    public static ClienteReporteDTO convertirClienteaClienteReporteDTO(Cliente cliente) {
-        ClienteReporteDTO clienteReporteDTO = new ClienteReporteDTO();
-        clienteReporteDTO.setNombres(cliente.getPersona().getNombre() + " " + cliente.getPersona().getApellido());
-        clienteReporteDTO.setDireccion(cliente.getPersona().getDireccion());
-        clienteReporteDTO.setTelefono(cliente.getPersona().getTelefono());
-        clienteReporteDTO.setContrasena(cliente.getPassword());
-        clienteReporteDTO.setEstado(cliente.getEstado());
-        return clienteReporteDTO;
-    }
-
     public static CuentaDTO convertirCuentaACuentaDTO(Cuenta cuenta) {
         CuentaDTO cuentaDTO = new CuentaDTO();
         cuentaDTO.setId(cuenta.getId());
@@ -88,7 +76,7 @@ public class DTOMapper {
         return cuentaDTO;
     }
 
-    public static Cuenta convertirCuentaTOACuenta(CuentaDTO cuentaDTO) {
+    public static Cuenta convertirCuentaDTOACuenta(CuentaDTO cuentaDTO) {
         return Cuenta.builder()
                 .id(cuentaDTO.getId() != null ? cuentaDTO.getId() : null)
                 .numeroCuenta(cuentaDTO.getNumeroCuenta())
@@ -104,13 +92,24 @@ public class DTOMapper {
     public static MovimientoDTO movimientoAMovimientoDTO(Movimiento movimiento) {
         MovimientoDTO movimientoDTO = new MovimientoDTO();
         movimientoDTO.setId(movimiento.getId());
-        movimientoDTO.setFecha(movimiento.getFechaMovimiento());
+        movimientoDTO.setFechaMovimiento(movimiento.getFechaMovimiento());
         movimientoDTO.setTipoMovimiento(movimiento.getTipoMovimiento());
         movimientoDTO.setValorMovimiento(movimiento.getValorMovimiento());
         movimientoDTO.setSaldo(movimiento.getSaldo());
         movimientoDTO.setCuenta(convertirCuentaACuentaDTO(movimiento.getCuenta()));
 
         return movimientoDTO;
+    }
+
+    public static Movimiento movimientoDTOAMovimiento(MovimientoDTO movimientoDTO) {
+        return Movimiento.builder()
+                .id(movimientoDTO.getId() != null ? movimientoDTO.getId() : null)
+                .fechaMovimiento(movimientoDTO.getFechaMovimiento())
+                .tipoMovimiento(movimientoDTO.getTipoMovimiento())
+                .valorMovimiento(movimientoDTO.getValorMovimiento())
+                .saldo(movimientoDTO.getSaldo())
+                .cuenta(convertirCuentaDTOACuenta(movimientoDTO.getCuenta()))
+                .build();
     }
 
     private static ReporteDTO movimientoAReporteDTO(Movimiento movimiento) {
@@ -168,18 +167,6 @@ public class DTOMapper {
                 )
         );
         return listaReporteDTO;
-    }
-
-
-    public static List<ClienteReporteDTO> listClienteAListClienteReporteDTO(List<Cliente> listaCliente) {
-        List<ClienteReporteDTO> listClienteReporteDTO = new ArrayList<>();
-        listaCliente.forEach(
-                cliente -> listClienteReporteDTO.add(
-                        convertirClienteaClienteReporteDTO(cliente)
-                )
-        );
-
-        return listClienteReporteDTO;
     }
 
 
