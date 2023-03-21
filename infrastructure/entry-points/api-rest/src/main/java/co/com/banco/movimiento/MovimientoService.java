@@ -35,7 +35,9 @@ public class MovimientoService {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public MovimientoDTO crearMovimiento(@RequestBody MovimientoDTO movimientoDTO) {
-        return movimientoAMovimientoDTO(movimientoUseCase.guardarMovimiento(movimientoDTOAMovimiento(movimientoDTO)));
+        return movimientoAMovimientoDTO(
+                movimientoUseCase.guardarMovimiento(movimientoDTOAMovimiento(movimientoDTO))
+        );
     }
 
     @DeleteMapping("/{id}")
@@ -43,9 +45,11 @@ public class MovimientoService {
     public void eliminarMovimiento(@PathVariable Integer id) {
         movimientoUseCase.eliminarMovimiento(id);
     }
-/*
+
     @PutMapping("/{id}")
-    public Cliente editarCliente(@RequestBody Cliente cliente, @PathVariable Integer id) {
-        return clienteUseCase.actualizarCliente(id, cliente);
-    }*/
+    public MovimientoDTO editarCliente(@RequestBody MovimientoDTO movimientoDTO, @PathVariable Integer id) {
+        return movimientoAMovimientoDTO(
+                movimientoUseCase.actualizarMovimiento(id, movimientoDTOAMovimiento(movimientoDTO))
+        );
+    }
 }

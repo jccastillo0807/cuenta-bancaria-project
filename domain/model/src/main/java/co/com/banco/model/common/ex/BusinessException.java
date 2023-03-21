@@ -24,7 +24,8 @@ public class BusinessException extends ApplicationException {
         FECHA_INICIAL_MAYOR("La fecha inicial no debe ser posterior a la fecha final."),
         FECHA_PARAMETRO_NO_ENCONTRADO("Falta algun parametro para generar reporte. Parametros: inicio=yyyy-MM-dd y fin=yyyy-MM-dd."),
         TIPO_MOVIMIENTO_NO_VALIDO("Tipo de movimiento Bancario No Valido."),
-        ID_NULL(" El id no puede ser null");
+        ID_NULL(" El id no puede ser null"),
+        PROCEDIMIENTO_NO_PROCESADO("No se pudo realizar operacion. Intente mas tarde.");
 
         private final String message;
 

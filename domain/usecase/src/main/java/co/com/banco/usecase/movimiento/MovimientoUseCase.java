@@ -64,6 +64,20 @@ public class MovimientoUseCase {
         }
     }
 
+    public Movimiento actualizarMovimiento(Integer id, Movimiento movimiento) {
+        if (id == null) {
+            throw new BusinessException(BusinessException.Type.ID_NULL);
+        }
+            Movimiento movimientoEnBaseDatos = movimientoRepository.encontrarPorId(id);
+            if (Objects.nonNull(movimientoEnBaseDatos)) {
+                movimientoEnBaseDatos.setFechaMovimiento(movimiento.getFechaMovimiento());
+                movimientoEnBaseDatos.setTipoMovimiento(movimiento.getTipoMovimiento());
+                movimientoEnBaseDatos.setValorMovimiento(movimiento.getValorMovimiento());
+                return guardarMovimiento(movimientoEnBaseDatos);
+            }
+            throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_ENCONTRADO);
+    }
+
     private Movimiento aplicarMovimiento(Movimiento movimiento) {
         Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
         if (movimiento.getTipoMovimiento().equalsIgnoreCase(DEBITO)) {
@@ -92,7 +106,7 @@ public class MovimientoUseCase {
     }
 
     private Cuenta aplicarNuevoSaldoEnCuenta(Cuenta cuenta) {
-        cuenta.setSaldoInicial(cuenta.getSaldoInicial());
+//        cuenta.setSaldoInicial(cuenta.getSaldoInicial());
         return cuentaRepository.guardarCuenta(cuenta);
     }
 
@@ -115,6 +129,5 @@ public class MovimientoUseCase {
             throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
         }
     }
-
 
 }
