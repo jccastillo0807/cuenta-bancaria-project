@@ -115,11 +115,16 @@ public class DTOMapper {
     private static ReporteDTO movimientoAReporteDTO(Movimiento movimiento) {
         ReporteDTO reporteDTO = new ReporteDTO();
         reporteDTO.setIdMovimiento(movimiento.getId());
+        reporteDTO.setMovimiento(movimiento.getTipoMovimiento());
         reporteDTO.setFechaMovimiento(movimiento.getFechaMovimiento());
         reporteDTO.setCliente(movimiento.getCuenta().getCliente().getPersona().getNombre() + " " +
                 movimiento.getCuenta().getCliente().getPersona().getApellido());
         reporteDTO.setTipo(movimiento.getCuenta().getTipoCuenta());
-        reporteDTO.setSaldoInicial(movimiento.getSaldo());
+        reporteDTO.setSaldoInicial(
+                movimiento.getTipoMovimiento().equalsIgnoreCase("CREDITO") ?
+                        movimiento.getSaldo() - movimiento.getValorMovimiento() :
+                        movimiento.getSaldo() + (movimiento.getValorMovimiento() * -1)
+        );
         reporteDTO.setEstado(movimiento.getCuenta().getEstado());
         reporteDTO.setSaldoDisponible(movimiento.getSaldo());
 

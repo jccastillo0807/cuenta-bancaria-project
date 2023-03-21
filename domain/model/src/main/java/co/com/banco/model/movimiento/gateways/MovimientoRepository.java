@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface MovimientoRepository {
     List<Movimiento> findAll();
+
     List<Movimiento> verMovimientos();
 
     Movimiento encontrarPorId(Integer id);

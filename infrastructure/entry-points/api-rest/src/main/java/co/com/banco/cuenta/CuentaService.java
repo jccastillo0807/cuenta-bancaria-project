@@ -44,6 +44,7 @@ public class CuentaService {
         cuentaUseCase.eliminarCuenta(id);
     }
 
+
     @PutMapping("/{id}")
     public CuentaDTO editarCuenta(@RequestBody CuentaDTO cuenta, @PathVariable Integer id) {
         return convertirCuentaACuentaDTO(cuentaUseCase.actualizarCuenta(id, convertirCuentaDTOACuenta(cuenta)));

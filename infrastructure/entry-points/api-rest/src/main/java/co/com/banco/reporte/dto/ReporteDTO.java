@@ -10,6 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class ReporteDTO implements Serializable {
     private Integer idMovimiento;
+    private String movimiento;
     private Date fechaMovimiento;
     private String cliente;
     private String tipo;
