@@ -37,7 +37,7 @@ public class CuentaUseCase {
                 throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
             }
         }
-        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
+        throw new BusinessException(BusinessException.Type.ID_NULL);
     }
 
     public Cuenta guardarCuenta(Cuenta cuenta) {
@@ -59,6 +59,8 @@ public class CuentaUseCase {
             if (!Objects.isNull(cuentaEncontrada)) {
                 cuentaEncontrada.setEstado(INACTIVO);
                 cuentaRepository.guardarCuenta(cuentaEncontrada);
+            }else {
+                throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
             }
         }
     }

@@ -37,13 +37,13 @@ public class MovimientoService {
     public MovimientoDTO crearMovimiento(@RequestBody MovimientoDTO movimientoDTO) {
         return movimientoAMovimientoDTO(movimientoUseCase.guardarMovimiento(movimientoDTOAMovimiento(movimientoDTO)));
     }
-/*
-*
-    @DeleteMapping("/{id}")
-    public void eliminarCliente(@PathVariable Integer id) {
-        clienteUseCase.inactivarCliente(id);
-    }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void eliminarMovimiento(@PathVariable Integer id) {
+        movimientoUseCase.eliminarMovimiento(id);
+    }
+/*
     @PutMapping("/{id}")
     public Cliente editarCliente(@RequestBody Cliente cliente, @PathVariable Integer id) {
         return clienteUseCase.actualizarCliente(id, cliente);

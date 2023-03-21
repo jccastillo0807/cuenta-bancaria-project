@@ -45,4 +45,9 @@ public class MovimientoRepositoryAdapter extends AdapterOperations<Movimiento, M
     public List<Movimiento> generarReporteEntreFechas(Date inicio, Date fin) {
         return DataMapper.converitirListaMovimientosDataAListaMovimiento(repository.findByFechaMovimientoBetween(inicio, fin));
     }
+
+    @Override
+    public void deleteById(Integer id) {
+         repository.deleteById(id);
+    }
 }

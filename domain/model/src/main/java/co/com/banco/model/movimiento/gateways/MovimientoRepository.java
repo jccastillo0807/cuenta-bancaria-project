@@ -14,4 +14,6 @@ public interface MovimientoRepository {
     Movimiento crearMovimiento(Movimiento movimiento);
 
     List<Movimiento> generarReporteEntreFechas(Date inicio, Date fin);
+
+    void deleteById(Integer id);
 }

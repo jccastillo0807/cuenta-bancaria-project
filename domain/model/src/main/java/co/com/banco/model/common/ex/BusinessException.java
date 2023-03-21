@@ -23,7 +23,8 @@ public class BusinessException extends ApplicationException {
         FORMATO_FECHA_INVALID("Formato de fecha invalido, formato requerido: yyyy-MM-dd"),
         FECHA_INICIAL_MAYOR("La fecha inicial no debe ser posterior a la fecha final."),
         FECHA_PARAMETRO_NO_ENCONTRADO("Falta algun parametro para generar reporte. Parametros: inicio=yyyy-MM-dd y fin=yyyy-MM-dd."),
-        TIPO_MOVIMIENTO_NO_VALIDO("Tipo de movimiento Bancario No Valido.");
+        TIPO_MOVIMIENTO_NO_VALIDO("Tipo de movimiento Bancario No Valido."),
+        ID_NULL(" El id no puede ser null");
 
         private final String message;
 
