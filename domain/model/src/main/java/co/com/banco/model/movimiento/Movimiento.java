@@ -1,6 +1,6 @@
 package co.com.banco.model.movimiento;
 
-import co.com.banco.model.cliente.Cliente;
+import co.com.banco.model.cuenta.Cuenta;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +14,9 @@ import java.util.Date;
 @Builder(toBuilder = true)
 public class Movimiento {
     private Integer id;
-    private Date fecha;
+    private Date fechaMovimiento;
     private String tipoMovimiento;
     private Long valorMovimiento;
     private Long saldo;
-    private Cliente cliente;
+    private Cuenta cuenta;
 }

@@ -1,6 +1,12 @@
 package co.com.banco.model.common;
 
+import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.common.ex.BusinessException;
+import co.com.banco.model.cuenta.Cuenta;
+import co.com.banco.model.movimiento.Movimiento;
+import co.com.banco.model.persona.Persona;
+
+import java.util.Objects;
 
 import static co.com.banco.model.common.StringUtils.isEmpty;
 import static java.util.Objects.isNull;
@@ -27,5 +33,46 @@ public final class ValidationUtils {
             }
         }
         return required;
+    }
+
+    public static void validarIdNulo(Integer id) {
+        if (id == null || id < 0) {
+            throw new BusinessException(BusinessException.Type.ID_NULL);
+        }
+    }
+
+    public static void validarCamposPersona(Persona persona) {
+        if (StringUtils.isEmpty(persona.getNumeroDocumento(), persona.getNombre(), persona.getApellido(),
+                persona.getDireccion(), persona.getTelefono())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+        }
+    }
+
+    public static void validarCamposCliente(Cliente cliente) {
+        if (Objects.isNull(cliente.getPersona()) ||
+                StringUtils.isEmpty(cliente.getPassword(), cliente.getUsuario(), cliente.getEstado())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
+        }
+        validarCamposPersona(cliente.getPersona());
+
+    }
+
+    public static void validarCamposCuenta(Cuenta cuenta) {
+        if (StringUtils.isEmpty(cuenta.getNumeroCuenta(), cuenta.getTipoCuenta(), cuenta.getEstado())
+                || cuenta.getSaldoInicial() == null || Objects.isNull(cuenta.getCliente())){
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
+        }
+        validarCamposCliente(cuenta.getCliente());
+    }
+
+    public static void validarCamposMovimiento(Movimiento movimiento) {
+        if (
+                movimiento.getFechaMovimiento() == null || movimiento.getValorMovimiento() == null
+                        || movimiento.getTipoMovimiento() == null || movimiento.getSaldo() == null
+                        || Objects.isNull(movimiento.getCuenta())
+        ) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
+        }
+        validarCamposCuenta(movimiento.getCuenta());
     }
 }

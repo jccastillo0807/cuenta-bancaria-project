@@ -2,16 +2,16 @@ package co.com.banco.jpa.cliente;
 
 import co.com.banco.jpa.cuenta.CuentaData;
 import co.com.banco.jpa.persona.PersonaData;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,14 +28,18 @@ public class ClienteData {
     private String password;
 
     @NotEmpty
-    @Column(name = "usuario")
+    @Size(min = 5, max = 25)
+    @Column(name = "usuario", unique = true)
     private String usuario;
+
+    @NotEmpty
+    @Column(name = "estado")
+    private String estado;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_persona", referencedColumnName = "id")
     private PersonaData personaData;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cuenta", referencedColumnName = "id")
-    private CuentaData cuentaData;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clienteData")
+    private List<CuentaData> cuentaDataList;
 }

@@ -1,17 +1,14 @@
 package co.com.banco.jpa.movimiento;
 
 import co.com.banco.jpa.cuenta.CuentaData;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
-import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,22 +20,24 @@ public class MovimientoData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty
-    @Column(name = "fecha_movimiento")
+//    @NotEmpty
+    @Column(name = "fecha_movimiento", nullable = false)
     private Date fechaMovimiento;
 
     @NotEmpty
     @Column(name = "tipo_movimiento")
     private String tipoMovimiento;
 
-    @NotEmpty
-    @Column(name = "valor_movimiento")
+//    @NotEmpty
+    @Column(name = "valor_movimiento", nullable = false)
     private Long valorMovimiento;
 
-    @NotEmpty
-    @Column(name = "saldo")
+//    @NotEmpty
+    @Column(name = "saldo", nullable = false)
     private Long saldo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "movimientoData")
-    private List<CuentaData> cuentaData;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cuenta", referencedColumnName = "id")
+    private CuentaData cuentaData;
+
 }
