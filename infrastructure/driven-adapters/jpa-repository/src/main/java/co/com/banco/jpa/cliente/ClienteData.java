@@ -2,10 +2,7 @@ package co.com.banco.jpa.cliente;
 
 import co.com.banco.jpa.cuenta.CuentaData;
 import co.com.banco.jpa.persona.PersonaData;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -13,7 +10,8 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
