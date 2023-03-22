@@ -12,7 +12,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Objects;
 
-import static co.com.banco.model.common.ValidationUtils.validarCuenta;
+import static co.com.banco.model.common.ValidationUtils.validarCamposCuenta;
+import static co.com.banco.model.common.ValidationUtils.validarIdNulo;
 
 @RequiredArgsConstructor
 public class CuentaUseCase {
@@ -29,69 +30,59 @@ public class CuentaUseCase {
     }
 
     public Cuenta obtenerCuentaPorId(Integer id) {
-        if (id != null) {
-            Cuenta cuentaEncontrada = cuentaRepository.encontrarCuentaPorId(id);
-            if (!Objects.isNull(cuentaEncontrada)) {
-                return cuentaEncontrada;
-            } else {
-                throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
-            }
+        validarIdNulo(id);
+        Cuenta cuentaEncontrada = cuentaRepository.encontrarCuentaPorId(id);
+        if (Objects.isNull(cuentaEncontrada)) {
+            throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
         }
-        throw new BusinessException(BusinessException.Type.ID_NULL);
+        return cuentaEncontrada;
     }
 
+
     public Cuenta guardarCuenta(Cuenta cuenta) {
+        validarCamposCuenta(cuenta);
+        validarSiExisteClienteYPersona(cuenta);
         Cuenta cuentaEncontrada = cuentaRepository.buscarPorNumeroCuenta(cuenta.getNumeroCuenta());
-        Boolean validacionCamposCuenta = validarCuenta(cuenta);
-        Boolean validarEntidadClienteYPersona = validarSiExisteClienteYPersona(cuenta);
-        if (validacionCamposCuenta && validarEntidadClienteYPersona) {
-            if (Objects.isNull(cuentaEncontrada)) {
-                return cuentaRepository.guardarCuenta(cuenta);
-            }
-            throw new BusinessException(BusinessException.Type.CUENTA_YA_EXISTE);
+        if (Objects.isNull(cuentaEncontrada)) {
+            return cuentaRepository.guardarCuenta(cuenta);
         }
-        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
+        throw new BusinessException(BusinessException.Type.CUENTA_YA_EXISTE);
     }
 
     public void eliminarCuenta(Integer id) {
-        if (id != null) {
-            Cuenta cuentaEncontrada = cuentaRepository.encontrarCuentaPorId(id);
-            if (!Objects.isNull(cuentaEncontrada)) {
-                cuentaEncontrada.setEstado(INACTIVO);
-                cuentaRepository.guardarCuenta(cuentaEncontrada);
-            }else {
-                throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
-            }
+        Cuenta cuentaEncontrada = cuentaRepository.encontrarCuentaPorId(id);
+        if (Objects.isNull(cuentaEncontrada)) {
+            throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
         }
+        cuentaEncontrada.setEstado(INACTIVO);
+        cuentaRepository.guardarCuenta(cuentaEncontrada);
     }
 
     public Cuenta actualizarCuenta(Integer id, Cuenta cuenta) {
-        if (id != null) {
-            Cuenta cuentaEnBaseDeDatos = cuentaRepository.encontrarCuentaPorId(id);
-            if (!Objects.isNull(cuentaEnBaseDeDatos)) {
-                cuentaEnBaseDeDatos.setTipoCuenta(cuenta.getTipoCuenta());
-                cuentaEnBaseDeDatos.setEstado(cuenta.getEstado());
-                cuentaEnBaseDeDatos.setSaldoInicial(cuenta.getSaldoInicial());
-                return cuentaRepository.guardarCuenta(cuentaEnBaseDeDatos);
-            } else {
-                throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
-            }
+        validarIdNulo(id);
+        validarCamposCuenta(cuenta);
+        Cuenta cuentaEnBaseDeDatos = cuentaRepository.buscarPorNumeroCuenta(cuenta.getNumeroCuenta());//cuentaRepository.encontrarCuentaPorId(id);
+        if (Objects.isNull(cuentaEnBaseDeDatos)) {
+            throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
         }
-        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
+
+        cuentaEnBaseDeDatos.setTipoCuenta(cuenta.getTipoCuenta());
+        cuentaEnBaseDeDatos.setEstado(cuenta.getEstado());
+        cuentaEnBaseDeDatos.setSaldoInicial(cuenta.getSaldoInicial());
+        return cuentaRepository.guardarCuenta(cuentaEnBaseDeDatos);
     }
 
-    private Boolean validarSiExisteClienteYPersona(Cuenta cuenta) {
+    private void validarSiExisteClienteYPersona(Cuenta cuenta) {
         Persona existePersona = personaRepository.encontrarPersonaPorId(cuenta.getCliente().getPersona().getId());
         Cliente existeCliente = clienteRepository.encontrarPorId(cuenta.getCliente().getId());
-        if (Objects.nonNull(existePersona)) {
-            if (Objects.nonNull(existeCliente)) {
-                return true;
-            } else {
-                throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
-            }
-        } else {
+
+        if (Objects.isNull(existePersona)) {
             throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
         }
+        if (Objects.isNull(existeCliente)) {
+            throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
+        }
     }
+
 
 }

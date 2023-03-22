@@ -11,6 +11,7 @@ import java.util.Date;
 public class ReporteDTO implements Serializable {
     private Integer idMovimiento;
     private String movimiento;
+    private Long valorMovimiento;
     private Date fechaMovimiento;
     private String cliente;
     private String tipo;

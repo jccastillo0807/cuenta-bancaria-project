@@ -1,5 +1,6 @@
 package co.com.banco.usecase.reporte;
 
+import co.com.banco.model.common.StringUtils;
 import co.com.banco.model.common.ex.BusinessException;
 import co.com.banco.model.movimiento.Movimiento;
 import co.com.banco.model.movimiento.gateways.MovimientoRepository;
@@ -16,19 +17,17 @@ public class ReporteUseCase {
 
     private final MovimientoRepository movimientoRepository;
 
-    public List<Movimiento> generarReporteEntreFechas(String  inicio, String fin) {
-        if (inicio != null && fin != null) {
-            Date fechaInicio = convertirFechaStringADate(inicio);
-            Date fechaFinal= convertirFechaStringADate(fin);
-            if (fechaInicio.after(fechaFinal)) {
-                throw new BusinessException(BusinessException.Type.FECHA_INICIAL_MAYOR);
-            }
-            return movimientoRepository.generarReporteEntreFechas(fechaInicio, fechaFinal);
+    public List<Movimiento> generarReporteEntreFechas(String inicio, String fin) {
+        validarExisteFecha(inicio, fin);
+        Date fechaInicio = convertirFechaStringADate(inicio);
+        Date fechaFinal = convertirFechaStringADate(fin);
+        if (fechaInicio.after(fechaFinal)) {
+            throw new BusinessException(BusinessException.Type.FECHA_INICIAL_MAYOR);
         }
-        throw new BusinessException(BusinessException.Type.FECHA_PARAMETRO_NO_ENCONTRADO);
+        return movimientoRepository.generarReporteEntreFechas(fechaInicio, fechaFinal);
     }
 
-    private Date convertirFechaStringADate(String fechaString){
+    private Date convertirFechaStringADate(String fechaString) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         Date fechaDate;
         try {
@@ -37,5 +36,12 @@ public class ReporteUseCase {
             throw new BusinessException(BusinessException.Type.FORMATO_FECHA_INVALID);
         }
         return fechaDate;
+    }
+
+
+    private void validarExisteFecha(String inicio, String fin) {
+        if (StringUtils.isEmpty(inicio, fin)) {
+            throw new BusinessException(BusinessException.Type.FECHA_PARAMETRO_NO_ENCONTRADO);
+        }
     }
 }

@@ -6,6 +6,8 @@ import co.com.banco.model.cuenta.Cuenta;
 import co.com.banco.model.movimiento.Movimiento;
 import co.com.banco.model.persona.Persona;
 
+import java.util.Objects;
+
 import static co.com.banco.model.common.StringUtils.isEmpty;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -33,81 +35,44 @@ public final class ValidationUtils {
         return required;
     }
 
-    public static Boolean validarPersona(Persona persona){
-        if (StringUtils.isEmpty(persona.getNumeroDocumento())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+    public static void validarIdNulo(Integer id) {
+        if (id == null || id < 0) {
+            throw new BusinessException(BusinessException.Type.ID_NULL);
         }
-        if (StringUtils.isEmpty(persona.getTipoDocumento())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
-        }
-        if (StringUtils.isEmpty(persona.getNombre())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
-        }
-        if (StringUtils.isEmpty(persona.getApellido())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
-        }
-        if (StringUtils.isEmpty(persona.getDireccion())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
-        }
-        if (StringUtils.isEmpty(persona.getTelefono())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
-        }
-        return true;
     }
 
-    public static Boolean validarCliente(Cliente cliente){
-        if (StringUtils.isEmpty(cliente.getPassword())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
+    public static void validarCamposPersona(Persona persona) {
+        if (StringUtils.isEmpty(persona.getNumeroDocumento(), persona.getNombre(), persona.getApellido(),
+                persona.getDireccion(), persona.getTelefono())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
         }
-        if (StringUtils.isEmpty(cliente.getUsuario())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
-        }
-        if (StringUtils.isEmpty(cliente.getEstado())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
-        }
-        if (Boolean.FALSE.equals(validarPersona(cliente.getPersona()))) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
-        }
-        return true;
     }
 
-    public static Boolean validarCuenta(Cuenta cuenta){
-        if (StringUtils.isEmpty(cuenta.getNumeroCuenta())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
+    public static void validarCamposCliente(Cliente cliente) {
+        if (Objects.isNull(cliente.getPersona()) ||
+                StringUtils.isEmpty(cliente.getPassword(), cliente.getUsuario(), cliente.getEstado())) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CLIENTE);
         }
-        if (StringUtils.isEmpty(cuenta.getTipoCuenta())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
-        }
-        if (cuenta.getSaldoInicial() == null) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
-        }
-        if (StringUtils.isEmpty(cuenta.getEstado())) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
-        }
-        if (Boolean.FALSE.equals(validarCliente(cuenta.getCliente()))) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
-        }
+        validarCamposPersona(cliente.getPersona());
 
-        return true;
     }
 
-    public static Boolean validarMovimiento(Movimiento movimiento){
-        if (movimiento.getFechaMovimiento() == null) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
+    public static void validarCamposCuenta(Cuenta cuenta) {
+        if (StringUtils.isEmpty(cuenta.getNumeroCuenta(), cuenta.getTipoCuenta(), cuenta.getEstado())
+                || cuenta.getSaldoInicial() == null || Objects.isNull(cuenta.getCliente())){
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_CUENTA);
         }
-        if (movimiento.getValorMovimiento() == null) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
-        }
-        if (movimiento.getTipoMovimiento() == null) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
-        }
-        if (movimiento.getSaldo() == null) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
-        }
-        if (Boolean.FALSE.equals(validarCuenta(movimiento.getCuenta()))) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
-        }
+        validarCamposCliente(cuenta.getCliente());
+    }
 
-        return true;
+    public static void validarCamposMovimiento(Movimiento movimiento) {
+        if (
+                movimiento.getFechaMovimiento() == null || movimiento.getValorMovimiento() == null
+                        || movimiento.getTipoMovimiento() == null || movimiento.getSaldo() == null
+                        || Objects.isNull(movimiento.getCuenta())
+        ) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_MOVIMIENTO);
+        }
+        validarCamposCuenta(movimiento.getCuenta());
     }
 }

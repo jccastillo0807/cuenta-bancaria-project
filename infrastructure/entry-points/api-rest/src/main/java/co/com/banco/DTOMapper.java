@@ -116,6 +116,7 @@ public class DTOMapper {
         ReporteDTO reporteDTO = new ReporteDTO();
         reporteDTO.setIdMovimiento(movimiento.getId());
         reporteDTO.setMovimiento(movimiento.getTipoMovimiento());
+        reporteDTO.setValorMovimiento(movimiento.getValorMovimiento());
         reporteDTO.setFechaMovimiento(movimiento.getFechaMovimiento());
         reporteDTO.setCliente(movimiento.getCuenta().getCliente().getPersona().getNombre() + " " +
                 movimiento.getCuenta().getCliente().getPersona().getApellido());

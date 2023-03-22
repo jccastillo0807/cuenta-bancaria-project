@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Objects;
 
-import static co.com.banco.model.common.ValidationUtils.validarCliente;
+import static co.com.banco.model.common.ValidationUtils.validarCamposCliente;
+import static co.com.banco.model.common.ValidationUtils.validarIdNulo;
 
 @RequiredArgsConstructor
 public class ClienteUseCase {
@@ -25,77 +26,69 @@ public class ClienteUseCase {
     }
 
     public Cliente obtenerClientePorId(Integer id) {
-        if (id != null) {
-            Cliente clienteEncontrado = clienteRepository.encontrarPorId(id);
-            if (!Objects.isNull(clienteEncontrado)) {
-                return clienteEncontrado;
-            } else {
-                throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
-            }
+        validarIdNulo(id);
+        Cliente clienteEncontrado = clienteRepository.encontrarPorId(id);
+        if (Objects.isNull(clienteEncontrado)) {
+            throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
         }
-        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
+        return clienteEncontrado;
     }
 
     public Cliente guardarCliente(Cliente cliente) {
-        Persona personaEncontrada = personaRepository.encontrarPorTipoYNumeroDocumento(cliente.getPersona().getTipoDocumento(), cliente.getPersona().getNumeroDocumento());
-        Boolean validarCamposCliente = validarCliente(cliente);
+        validarCamposCliente(cliente);
+        Persona personaEncontrada = personaRepository.encontrarPorTipoYNumeroDocumento(
+                cliente.getPersona().getTipoDocumento(), cliente.getPersona().getNumeroDocumento()
+        );
 
-        if (Boolean.TRUE.equals(validarCamposCliente)) {
-            if (Objects.isNull(personaEncontrada)){
-                Persona personaCreada = personaRepository.save(cliente.getPersona());
-                cliente.setPersona(personaCreada);
-                return clienteRepository.guardarCliente(cliente);
-            }
-            throw new BusinessException(BusinessException.Type.PERSONA_EXISTE);
+        if (Objects.isNull(personaEncontrada)) {
+            Persona personaCreada = personaRepository.save(cliente.getPersona());
+            cliente.setPersona(personaCreada);
+            return clienteRepository.guardarCliente(cliente);
         }
-
-        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
+        throw new BusinessException(BusinessException.Type.PERSONA_EXISTE);
     }
 
 
     public void inactivarCliente(Integer id) {
-        if (id != null) {
-            Cliente clienteEncontrado = clienteRepository.encontrarPorId(id);
-            if (!Objects.isNull(clienteEncontrado)) {
-                clienteEncontrado.setEstado(ESTADO_INACTIVO);
-                clienteRepository.guardarCliente(clienteEncontrado);
-            }
+        Cliente clienteEncontrado = clienteRepository.encontrarPorId(id);
+        if (Objects.isNull(clienteEncontrado)) {
+            throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
         }
+        clienteEncontrado.setEstado(ESTADO_INACTIVO);
+        clienteRepository.guardarCliente(clienteEncontrado);
+
     }
 
     public Cliente actualizarCliente(Integer id, Cliente cliente) {
 
-        Boolean validarCamposCliente = validarCliente(cliente);
-        Boolean validarEntidadPersona = validarSiExistePersona(cliente);
-        if (validarEntidadPersona && validarCamposCliente) {
-            Cliente clienteEnBaseDeDatos = clienteRepository.encontrarPorId(id);
-            Persona personaEnBaseDeDatos = personaRepository.encontrarPersonaPorId(cliente.getPersona().getId());
+        validarCamposCliente(cliente);
+        validarSiExistePersona(cliente);
+        Cliente clienteEnBaseDeDatos = clienteRepository.encontrarPorId(id);
+        Persona personaEnBaseDeDatos = personaRepository.encontrarPersonaPorId(cliente.getPersona().getId());
 
-            if (Objects.isNull(clienteEnBaseDeDatos)) {
-                throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
-            }
-            clienteEnBaseDeDatos.setPassword(cliente.getPassword());
-            personaEnBaseDeDatos.setNombre(cliente.getPersona().getNombre());
-            personaEnBaseDeDatos.setApellido(cliente.getPersona().getApellido());
-            personaEnBaseDeDatos.setDireccion(cliente.getPersona().getDireccion());
-            personaEnBaseDeDatos.setTelefono(cliente.getPersona().getTelefono());
-
-            personaRepository.save(personaEnBaseDeDatos);
-            return clienteRepository.guardarCliente(clienteEnBaseDeDatos);
+        if (Objects.isNull(clienteEnBaseDeDatos)) {
+            throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
         }
+        clienteEnBaseDeDatos.setPassword(cliente.getPassword());
+        personaEnBaseDeDatos.setNombre(cliente.getPersona().getNombre());
+        personaEnBaseDeDatos.setApellido(cliente.getPersona().getApellido());
+        personaEnBaseDeDatos.setDireccion(cliente.getPersona().getDireccion());
+        personaEnBaseDeDatos.setTelefono(cliente.getPersona().getTelefono());
 
-        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
+        personaRepository.save(personaEnBaseDeDatos);
+        return clienteRepository.guardarCliente(clienteEnBaseDeDatos);
     }
 
-    private Boolean validarSiExistePersona(Cliente cliente) {
-        if (cliente.getPersona().getId() != null) {
-            Persona existePersona = personaRepository.encontrarPersonaPorId(cliente.getPersona().getId());
-            if (Objects.nonNull(existePersona)) {
-                return true;
-            } else {
-                throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
-            }
+    private void validarSiExistePersona(Cliente cliente) {
+        if (cliente.getPersona().getId() == null) {
+            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
         }
-        throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
+
+        Persona existePersona = personaRepository.encontrarPersonaPorId(cliente.getPersona().getId());
+        if (Objects.isNull(existePersona)) {
+            throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
+        }
     }
+
+
 }

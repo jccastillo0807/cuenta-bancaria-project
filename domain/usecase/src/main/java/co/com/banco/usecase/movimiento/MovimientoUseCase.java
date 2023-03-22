@@ -14,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Objects;
 
-import static co.com.banco.model.common.ValidationUtils.validarMovimiento;
+import static co.com.banco.model.common.ValidationUtils.validarCamposMovimiento;
+import static co.com.banco.model.common.ValidationUtils.validarIdNulo;
 
 @RequiredArgsConstructor
 public class MovimientoUseCase {
@@ -32,27 +33,24 @@ public class MovimientoUseCase {
     }
 
     public Movimiento findById(Integer id) {
-        if (id != null) {
-            Movimiento movimientoEncontrado = movimientoRepository.encontrarPorId(id);
-            if (!Objects.isNull(movimientoEncontrado)) {
-                return movimientoEncontrado;
-            } else {
-                throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_ENCONTRADO);
-            }
+        validarIdNulo(id);
+        Movimiento movimientoEncontrado = movimientoRepository.encontrarPorId(id);
+        if (Objects.isNull(movimientoEncontrado)) {
+            throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_ENCONTRADO);
         }
-        throw new BusinessException(BusinessException.Type.ID_NULL);
+        return movimientoEncontrado;
     }
 
     public Movimiento guardarMovimiento(Movimiento movimiento) {
-        Boolean validacionCamposMovimiento = validarMovimiento(movimiento);
-        Boolean validacionExistenciaMovimientoClientePersona = movimientoClientePersona(movimiento);
-        if (validacionExistenciaMovimientoClientePersona && validacionCamposMovimiento) {
-            Movimiento movimientoAplicado = aplicarMovimiento(movimiento);
-            Cuenta cuentaConNuevoSaldo = aplicarNuevoSaldoEnCuenta(movimientoAplicado.getCuenta());
-            movimientoAplicado.setCuenta(cuentaConNuevoSaldo);
-            return movimientoRepository.crearMovimiento(movimientoAplicado);
+        validarCamposMovimiento(movimiento);
+        validarEstructuraMovimiento(movimiento);
+        if (movimiento.getValorMovimiento() <= 0L) {
+            throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_PERMITIDO);
         }
-        throw new BusinessException(BusinessException.Type.ERROR_BASE_DATOS);
+        Movimiento movimientoAplicado = aplicarMovimiento(movimiento);
+        Cuenta cuentaConNuevoSaldo = guardarNuevoSaldoEnCuenta(movimientoAplicado.getCuenta());
+        movimientoAplicado.setCuenta(cuentaConNuevoSaldo);
+        return movimientoRepository.crearMovimiento(movimientoAplicado);
     }
 
     public void eliminarMovimiento(Integer id) {
@@ -65,68 +63,73 @@ public class MovimientoUseCase {
     }
 
     public Movimiento actualizarMovimiento(Integer id, Movimiento movimiento) {
-        if (id == null) {
-            throw new BusinessException(BusinessException.Type.ID_NULL);
+        validarIdNulo(id);
+        Movimiento movimientoEnBaseDatos = movimientoRepository.encontrarPorId(id);
+        if (Objects.nonNull(movimientoEnBaseDatos)) {
+            movimientoEnBaseDatos.setFechaMovimiento(movimiento.getFechaMovimiento());
+            movimientoEnBaseDatos.setTipoMovimiento(movimiento.getTipoMovimiento());
+            movimientoEnBaseDatos.setValorMovimiento(movimiento.getValorMovimiento());
+            return guardarMovimiento(movimientoEnBaseDatos);
         }
-            Movimiento movimientoEnBaseDatos = movimientoRepository.encontrarPorId(id);
-            if (Objects.nonNull(movimientoEnBaseDatos)) {
-                movimientoEnBaseDatos.setFechaMovimiento(movimiento.getFechaMovimiento());
-                movimientoEnBaseDatos.setTipoMovimiento(movimiento.getTipoMovimiento());
-                movimientoEnBaseDatos.setValorMovimiento(movimiento.getValorMovimiento());
-                return guardarMovimiento(movimientoEnBaseDatos);
-            }
-            throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_ENCONTRADO);
+        throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_ENCONTRADO);
     }
 
     private Movimiento aplicarMovimiento(Movimiento movimiento) {
-        Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
-        if (movimiento.getTipoMovimiento().equalsIgnoreCase(DEBITO)) {
-            Long saldoDisponible = validarSaldoDisponibleEnCuenta(movimiento.getCuenta().getId(), movimiento.getValorMovimiento());
-            if (saldoDisponible > 0L) {
-                movimiento.setSaldo(cuentaConsultada.getSaldoInicial() - movimiento.getValorMovimiento());
-                movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
-                movimiento.setValorMovimiento(movimiento.getValorMovimiento() * -1L);
-            } else {
-                throw new BusinessException(BusinessException.Type.SALDO_INFERIOR_CERO);
-            }
-        } else {
-            if (movimiento.getTipoMovimiento().equalsIgnoreCase(CREDITO)) {
-                movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
-                movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
-            } else {
+        switch (movimiento.getTipoMovimiento().toUpperCase()) {
+
+            case DEBITO:
+                return construirMovimientoDebito(movimiento);
+
+            case CREDITO:
+                return construirMovimientoCredito(movimiento);
+
+            default:
                 throw new BusinessException(BusinessException.Type.TIPO_MOVIMIENTO_NO_VALIDO);
-            }
         }
+    }
+
+    private Movimiento construirMovimientoDebito(Movimiento movimiento) {
+        Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
+        Long saldoDisponible = validarSaldoDisponibleEnCuenta(movimiento.getCuenta().getId(), movimiento.getValorMovimiento());
+        if (saldoDisponible < 0L) {
+            throw new BusinessException(BusinessException.Type.SALDO_INFERIOR_CERO);
+        }
+        movimiento.setSaldo(cuentaConsultada.getSaldoInicial() - movimiento.getValorMovimiento());
+        movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
+        movimiento.setValorMovimiento(movimiento.getValorMovimiento() * -1L);
+        return movimiento;
+    }
+
+    private Movimiento construirMovimientoCredito(Movimiento movimiento) {
+        Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
+        movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
+        movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
         return movimiento;
     }
 
     private Long validarSaldoDisponibleEnCuenta(Integer idCuenta, Long movimientoDebito) {
         Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(idCuenta);
-        return Math.max(cuentaConsultada.getSaldoInicial() - movimientoDebito, 0L);
+        return cuentaConsultada.getSaldoInicial() - movimientoDebito;
     }
 
-    private Cuenta aplicarNuevoSaldoEnCuenta(Cuenta cuenta) {
-//        cuenta.setSaldoInicial(cuenta.getSaldoInicial());
+    private Cuenta guardarNuevoSaldoEnCuenta(Cuenta cuenta) {
         return cuentaRepository.guardarCuenta(cuenta);
     }
 
-    private Boolean movimientoClientePersona(Movimiento movimiento) {
-        Persona existePersona = personaRepository.encontrarPersonaPorId(movimiento.getCuenta().getCliente().getPersona().getId());
+    private void validarEstructuraMovimiento(Movimiento movimiento) {
+        Persona existePersona = personaRepository.encontrarPersonaPorId(
+                movimiento.getCuenta().getCliente().getPersona().getId());
         Cliente existeCliente = clienteRepository.encontrarPorId(movimiento.getCuenta().getCliente().getId());
         Cuenta existeCuenta = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
 
-        if (Objects.nonNull(existePersona)) {
-            if (Objects.nonNull(existeCliente)) {
-                if (Objects.nonNull(existeCuenta)) {
-                    return true;
-                } else {
-                    throw new BusinessException(BusinessException.Type.ERROR_CUENTA_NO_REGISTRADO);
-                }
-            } else {
-                throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
-            }
-        } else {
+        if (Objects.isNull(existePersona)) {
             throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
+        }
+        if (Objects.isNull(existeCliente)) {
+            throw new BusinessException(BusinessException.Type.ERROR_CLIENTE_NO_REGISTRADO);
+        }
+        if (Objects.isNull(existeCuenta)) {
+            throw new BusinessException(BusinessException.Type.ERROR_CUENTA_NO_REGISTRADO);
         }
     }
 
