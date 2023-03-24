@@ -96,6 +96,7 @@ public class DTOMapper {
         movimientoDTO.setTipoMovimiento(movimiento.getTipoMovimiento());
         movimientoDTO.setValorMovimiento(movimiento.getValorMovimiento());
         movimientoDTO.setSaldo(movimiento.getSaldo());
+        movimientoDTO.setSaldoAnterior(movimiento.getSaldoAnterior());
         movimientoDTO.setCuenta(convertirCuentaACuentaDTO(movimiento.getCuenta()));
 
         return movimientoDTO;
@@ -108,6 +109,7 @@ public class DTOMapper {
                 .tipoMovimiento(movimientoDTO.getTipoMovimiento())
                 .valorMovimiento(movimientoDTO.getValorMovimiento())
                 .saldo(movimientoDTO.getSaldo())
+                .saldoAnterior(movimientoDTO.getSaldoAnterior())
                 .cuenta(convertirCuentaDTOACuenta(movimientoDTO.getCuenta()))
                 .build();
     }

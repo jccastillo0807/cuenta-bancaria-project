@@ -25,7 +25,9 @@ public class BusinessException extends ApplicationException {
         FECHA_PARAMETRO_NO_ENCONTRADO("Falta algun parametro para generar reporte. Parametros: inicio=yyyy-MM-dd y fin=yyyy-MM-dd."),
         TIPO_MOVIMIENTO_NO_VALIDO("Tipo de movimiento Bancario No Valido."),
         ID_NULL(" El id no puede ser null"),
-        MOVIMIENTO_NO_PERMITIDO("El valor del movimiento bancario debe ser superior a cero.");
+        MOVIMIENTO_NO_PERMITIDO("El valor del movimiento bancario debe ser superior a cero."),
+        MOVIMIENTO_NO_ES_ULTIMO("Solo se permite modificar el último movimiento bancario."),
+        OPERACION_NO_PERMITDA("Operacion no permitida.");
 
         private final String message;
 

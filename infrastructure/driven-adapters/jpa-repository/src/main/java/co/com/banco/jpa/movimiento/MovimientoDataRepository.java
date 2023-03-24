@@ -7,5 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface MovimientoDataRepository extends CrudRepository<MovimientoData, Integer>, QueryByExampleExecutor<MovimientoData> {
-List<MovimientoData> findByFechaMovimientoBetween(Date inicio, Date fin);
+    List<MovimientoData> findByFechaMovimientoBetween(Date inicio, Date fin);
+
+    List<MovimientoData> findByCuentaDataId(Integer id);
 }

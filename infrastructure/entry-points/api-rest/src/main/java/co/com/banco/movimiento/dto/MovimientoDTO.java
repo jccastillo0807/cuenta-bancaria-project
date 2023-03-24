@@ -15,6 +15,7 @@ public class MovimientoDTO implements Serializable {
     private String tipoMovimiento;
     private Long valorMovimiento;
     private Long saldo;
+    private Long saldoAnterior;
     private CuentaDTO cuenta;
     private static final long serialVersionUID = 1L;
 }

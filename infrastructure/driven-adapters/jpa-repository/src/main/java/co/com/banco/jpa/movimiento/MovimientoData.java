@@ -20,7 +20,6 @@ public class MovimientoData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-//    @NotEmpty
     @Column(name = "fecha_movimiento", nullable = false)
     private Date fechaMovimiento;
 
@@ -28,13 +27,14 @@ public class MovimientoData {
     @Column(name = "tipo_movimiento")
     private String tipoMovimiento;
 
-//    @NotEmpty
     @Column(name = "valor_movimiento", nullable = false)
     private Long valorMovimiento;
 
-//    @NotEmpty
     @Column(name = "saldo", nullable = false)
     private Long saldo;
+
+    @Column(name = "saldo_anterior", nullable = false)
+    private Long saldoAnterior;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cuenta", referencedColumnName = "id")

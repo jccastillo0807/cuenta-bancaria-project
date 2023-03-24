@@ -66,9 +66,11 @@ public class MovimientoUseCase {
         validarIdNulo(id);
         Movimiento movimientoEnBaseDatos = movimientoRepository.encontrarPorId(id);
         if (Objects.nonNull(movimientoEnBaseDatos)) {
+            validarSiEsUltimoMovimiento(movimiento);
             movimientoEnBaseDatos.setFechaMovimiento(movimiento.getFechaMovimiento());
             movimientoEnBaseDatos.setTipoMovimiento(movimiento.getTipoMovimiento());
             movimientoEnBaseDatos.setValorMovimiento(movimiento.getValorMovimiento());
+            movimientoEnBaseDatos.setSaldo(movimiento.getSaldoAnterior());
             return guardarMovimiento(movimientoEnBaseDatos);
         }
         throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_ENCONTRADO);
@@ -90,26 +92,37 @@ public class MovimientoUseCase {
 
     private Movimiento construirMovimientoDebito(Movimiento movimiento) {
         Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
-        Long saldoDisponible = validarSaldoDisponibleEnCuenta(movimiento.getCuenta().getId(), movimiento.getValorMovimiento());
-        if (saldoDisponible < 0L) {
-            throw new BusinessException(BusinessException.Type.SALDO_INFERIOR_CERO);
-        }
-        movimiento.setSaldo(cuentaConsultada.getSaldoInicial() - movimiento.getValorMovimiento());
-        movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
+        validarSaldoDisponibleEnCuenta(movimiento.getCuenta().getId(), movimiento.getValorMovimiento());
         movimiento.setValorMovimiento(movimiento.getValorMovimiento() * -1L);
+        if (movimiento.getId() == null) {
+            movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
+            movimiento.setSaldoAnterior(cuentaConsultada.getSaldoInicial());
+            movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
+            return movimiento;
+        }
+        movimiento.setSaldo(movimiento.getSaldoAnterior() + movimiento.getValorMovimiento());
+        movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
         return movimiento;
     }
 
     private Movimiento construirMovimientoCredito(Movimiento movimiento) {
         Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
-        movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
+        if (movimiento.getId() == null) {
+            movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
+            movimiento.setSaldoAnterior(cuentaConsultada.getSaldoInicial());
+            movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
+            return movimiento;
+        }
+        movimiento.setSaldo( movimiento.getSaldoAnterior() + movimiento.getValorMovimiento());
         movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
         return movimiento;
     }
 
-    private Long validarSaldoDisponibleEnCuenta(Integer idCuenta, Long movimientoDebito) {
+    private void validarSaldoDisponibleEnCuenta(Integer idCuenta, Long movimientoDebito) {
         Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(idCuenta);
-        return cuentaConsultada.getSaldoInicial() - movimientoDebito;
+        if (cuentaConsultada.getSaldoInicial() - movimientoDebito < 0L) {
+            throw new BusinessException(BusinessException.Type.SALDO_INFERIOR_CERO);
+        }
     }
 
     private Cuenta guardarNuevoSaldoEnCuenta(Cuenta cuenta) {
@@ -133,4 +146,14 @@ public class MovimientoUseCase {
         }
     }
 
+    private void validarSiEsUltimoMovimiento(Movimiento movimiento) {
+        List<Movimiento> movimientosCuenta = movimientoRepository.encontrarMovimientosPorCuentaAsociada(movimiento.getCuenta().getId());
+        movimientosCuenta.forEach(
+                movimientoActual -> {
+                    if (movimientoActual.getId() > movimiento.getId()) {
+                        throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_ES_ULTIMO);
+                    }
+                }
+        );
+    }
 }

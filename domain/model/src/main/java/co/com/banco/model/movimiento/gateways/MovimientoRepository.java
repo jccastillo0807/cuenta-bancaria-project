@@ -17,4 +17,6 @@ public interface MovimientoRepository {
     List<Movimiento> generarReporteEntreFechas(Date inicio, Date fin);
 
     void deleteById(Integer id);
+
+    List<Movimiento> encontrarMovimientosPorCuentaAsociada(Integer id);
 }
