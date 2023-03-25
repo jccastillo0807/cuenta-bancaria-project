@@ -35,6 +35,14 @@ public final class ValidationUtils {
         return required;
     }
 
+    public static void validarPathConId (Integer idPath, Integer idObjeto){
+        validarIdNulo(idObjeto);
+        validarIdNulo(idPath);
+        if (idPath != idObjeto) {
+            throw new BusinessException(BusinessException.Type.PATH_NO_IGUAL_ID);
+        }
+    }
+
     public static void validarIdNulo(Integer id) {
         if (id == null || id < 0) {
             throw new BusinessException(BusinessException.Type.ID_NULL);

@@ -32,7 +32,7 @@ public class CuentaUseCase {
     public Cuenta obtenerCuentaPorId(Integer id) {
         validarIdNulo(id);
         Cuenta cuentaEncontrada = cuentaRepository.encontrarCuentaPorId(id);
-        if (Objects.isNull(cuentaEncontrada)) {
+        if (Objects.isNull(cuentaEncontrada) || !cuentaEncontrada.getEstado().equalsIgnoreCase(ACTIVO)) {
             throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
         }
         return cuentaEncontrada;
@@ -42,18 +42,13 @@ public class CuentaUseCase {
     public Cuenta guardarCuenta(Cuenta cuenta) {
         validarCamposCuenta(cuenta);
         validarSiExisteClienteYPersona(cuenta);
-        Cuenta cuentaEncontrada = cuentaRepository.buscarPorNumeroCuenta(cuenta.getNumeroCuenta());
-        if (Objects.isNull(cuentaEncontrada)) {
-            return cuentaRepository.guardarCuenta(cuenta);
-        }
-        throw new BusinessException(BusinessException.Type.CUENTA_YA_EXISTE);
+        validarSiExisteCuenta(cuenta);
+        return cuentaRepository.guardarCuenta(cuenta);
     }
 
+
     public void eliminarCuenta(Integer id) {
-        Cuenta cuentaEncontrada = cuentaRepository.encontrarCuentaPorId(id);
-        if (Objects.isNull(cuentaEncontrada)) {
-            throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
-        }
+        Cuenta cuentaEncontrada = obtenerCuentaPorId(id);
         cuentaEncontrada.setEstado(INACTIVO);
         cuentaRepository.guardarCuenta(cuentaEncontrada);
     }
@@ -61,15 +56,21 @@ public class CuentaUseCase {
     public Cuenta actualizarCuenta(Integer id, Cuenta cuenta) {
         validarIdNulo(id);
         validarCamposCuenta(cuenta);
-        Cuenta cuentaEnBaseDeDatos = cuentaRepository.buscarPorNumeroCuenta(cuenta.getNumeroCuenta());//cuentaRepository.encontrarCuentaPorId(id);
-        if (Objects.isNull(cuentaEnBaseDeDatos)) {
+        Cuenta cuentaEnBaseDeDatos = cuentaRepository.buscarPorNumeroCuenta(cuenta.getNumeroCuenta());
+        if (Objects.isNull(cuentaEnBaseDeDatos) || !cuentaEnBaseDeDatos.getEstado().equalsIgnoreCase(ACTIVO)) {
             throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
         }
-
         cuentaEnBaseDeDatos.setTipoCuenta(cuenta.getTipoCuenta());
         cuentaEnBaseDeDatos.setEstado(cuenta.getEstado());
         cuentaEnBaseDeDatos.setSaldoInicial(cuenta.getSaldoInicial());
         return cuentaRepository.guardarCuenta(cuentaEnBaseDeDatos);
+    }
+
+    private void validarSiExisteCuenta(Cuenta cuenta){
+        Cuenta cuentaEncontrada = cuentaRepository.buscarPorNumeroCuenta(cuenta.getNumeroCuenta());
+        if (Objects.nonNull(cuentaEncontrada)) {
+            throw new BusinessException(BusinessException.Type.CUENTA_YA_EXISTE);
+        }
     }
 
     private void validarSiExisteClienteYPersona(Cuenta cuenta) {

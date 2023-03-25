@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Objects;
 
-import static co.com.banco.model.common.ValidationUtils.validarCamposMovimiento;
-import static co.com.banco.model.common.ValidationUtils.validarIdNulo;
+import static co.com.banco.model.common.ValidationUtils.*;
+
 
 @RequiredArgsConstructor
 public class MovimientoUseCase {
@@ -54,26 +54,19 @@ public class MovimientoUseCase {
     }
 
     public void eliminarMovimiento(Integer id) {
-        Movimiento movimientoEncontrado = movimientoRepository.encontrarPorId(id);
-        if (Objects.isNull(movimientoEncontrado)) {
-            throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_ENCONTRADO);
-        } else {
-            movimientoRepository.deleteById(id);
-        }
+        findById(id);
+        movimientoRepository.deleteById(id);
     }
 
     public Movimiento actualizarMovimiento(Integer id, Movimiento movimiento) {
-        validarIdNulo(id);
-        Movimiento movimientoEnBaseDatos = movimientoRepository.encontrarPorId(id);
-        if (Objects.nonNull(movimientoEnBaseDatos)) {
-            validarSiEsUltimoMovimiento(movimiento);
-            movimientoEnBaseDatos.setFechaMovimiento(movimiento.getFechaMovimiento());
-            movimientoEnBaseDatos.setTipoMovimiento(movimiento.getTipoMovimiento());
-            movimientoEnBaseDatos.setValorMovimiento(movimiento.getValorMovimiento());
-            movimientoEnBaseDatos.setSaldo(movimiento.getSaldoAnterior());
-            return guardarMovimiento(movimientoEnBaseDatos);
-        }
-        throw new BusinessException(BusinessException.Type.MOVIMIENTO_NO_ENCONTRADO);
+        validarPathConId(id, movimiento.getId());
+        Movimiento movimientoEnBaseDatos = findById(id);
+        validarSiEsUltimoMovimiento(movimiento);
+        movimientoEnBaseDatos.setFechaMovimiento(movimiento.getFechaMovimiento());
+        movimientoEnBaseDatos.setTipoMovimiento(movimiento.getTipoMovimiento());
+        movimientoEnBaseDatos.setValorMovimiento(movimiento.getValorMovimiento());
+        movimientoEnBaseDatos.setSaldo(movimiento.getSaldoAnterior());
+        return guardarMovimiento(movimientoEnBaseDatos);
     }
 
     private Movimiento aplicarMovimiento(Movimiento movimiento) {
@@ -92,7 +85,7 @@ public class MovimientoUseCase {
 
     private Movimiento construirMovimientoDebito(Movimiento movimiento) {
         Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
-        validarSaldoDisponibleEnCuenta(movimiento.getCuenta().getId(), movimiento.getValorMovimiento());
+        validarSaldoDisponibleEnCuenta(movimiento);
         movimiento.setValorMovimiento(movimiento.getValorMovimiento() * -1L);
         if (movimiento.getId() == null) {
             movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
@@ -113,14 +106,14 @@ public class MovimientoUseCase {
             movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
             return movimiento;
         }
-        movimiento.setSaldo( movimiento.getSaldoAnterior() + movimiento.getValorMovimiento());
+        movimiento.setSaldo(movimiento.getSaldoAnterior() + movimiento.getValorMovimiento());
         movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
         return movimiento;
     }
 
-    private void validarSaldoDisponibleEnCuenta(Integer idCuenta, Long movimientoDebito) {
-        Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(idCuenta);
-        if (cuentaConsultada.getSaldoInicial() - movimientoDebito < 0L) {
+    private void validarSaldoDisponibleEnCuenta(Movimiento movimiento) {
+        Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
+        if (cuentaConsultada.getSaldoInicial() - movimiento.getValorMovimiento() < 0L) {
             throw new BusinessException(BusinessException.Type.SALDO_INFERIOR_CERO);
         }
     }
