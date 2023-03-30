@@ -6,8 +6,6 @@ import co.com.banco.model.persona.Persona;
 import co.com.banco.model.persona.gateways.PersonaRepository;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Objects;
-
 
 @RequiredArgsConstructor
 public class PersonaUseCase {
@@ -15,14 +13,10 @@ public class PersonaUseCase {
     private final PersonaRepository personaRepository;
 
     public Persona encontrarPorTipoYNumeroDocumento(String tipoDocumento, String numeroDocumento) {
-        Persona personaEncontrada = personaRepository.encontrarPorTipoYNumeroDocumento(tipoDocumento, numeroDocumento);
-        if (Objects.isNull(personaEncontrada)) {
-            throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
-        }
-        return personaEncontrada;
+        return personaRepository.encontrarPorTipoYNumeroDocumento(tipoDocumento, numeroDocumento);
     }
 
-    public Persona guardarPersonaEditada(Persona persona) {
+    public Persona guardarPersona(Persona persona) {
         return personaRepository.save(persona);
     }
 
@@ -34,7 +28,7 @@ public class PersonaUseCase {
         persona.setApellido(cliente.getPersona().getApellido());
         persona.setDireccion(cliente.getPersona().getDireccion());
         persona.setTelefono(cliente.getPersona().getTelefono());
-        return guardarPersonaEditada(persona);
+        return guardarPersona(persona);
     }
 
 }

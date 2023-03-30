@@ -6,7 +6,6 @@ import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.persona.Persona;
 import co.com.banco.usecase.cliente.ClienteUseCase;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,9 +68,6 @@ class ClienteServiceTest {
         clienteDTO.setPersona(personaDTO);
     }
 
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void shouldVerTodosLosClientes() {

@@ -4,7 +4,7 @@ import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.cliente.gateways.ClienteRepository;
 import co.com.banco.model.common.ex.BusinessException;
 import co.com.banco.model.persona.Persona;
-import co.com.banco.model.persona.gateways.PersonaRepository;
+import co.com.banco.usecase.persona.PersonaUseCase;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class ClienteUseCase {
     public static final String ESTADO_INACTIVO = "INACTIVO";
     public static final String ESTADO_ACTIVO = "ACTIVO";
     private final ClienteRepository clienteRepository;
-    private final PersonaRepository personaRepository;
+    private final PersonaUseCase personaUseCase;
 
     public List<Cliente> obtenerClientes() {
         return clienteRepository.encontrarClientes(ESTADO_ACTIVO);
@@ -36,14 +36,13 @@ public class ClienteUseCase {
 
     public Cliente guardarCliente(Cliente cliente) {
         validarCamposCliente(cliente);
-        Persona personaEncontrada = personaRepository.encontrarPorTipoYNumeroDocumento(
+        Persona personaEncontrada = personaUseCase.encontrarPorTipoYNumeroDocumento(
                 cliente.getPersona().getTipoDocumento(), cliente.getPersona().getNumeroDocumento()
         );
-
         if (Objects.nonNull(personaEncontrada)) {
             throw new BusinessException(BusinessException.Type.PERSONA_EXISTE);
         }
-        Persona personaCreada = personaRepository.save(cliente.getPersona());
+        Persona personaCreada = personaUseCase.guardarPersona(cliente.getPersona());
         cliente.setPersona(personaCreada);
         return clienteRepository.guardarCliente(cliente);
     }
@@ -57,29 +56,16 @@ public class ClienteUseCase {
 
     public Cliente actualizarCliente(Integer id, Cliente cliente) {
         validarCamposCliente(cliente);
-        validarSiExistePersona(cliente);
-        Cliente clienteEnBaseDeDatos = obtenerClientePorId(id);
-        Persona personaEnBaseDeDatos = personaRepository.encontrarPersonaPorId(cliente.getPersona().getId());
-        clienteEnBaseDeDatos.setPassword(cliente.getPassword());
-        personaEnBaseDeDatos.setNombre(cliente.getPersona().getNombre());
-        personaEnBaseDeDatos.setApellido(cliente.getPersona().getApellido());
-        personaEnBaseDeDatos.setDireccion(cliente.getPersona().getDireccion());
-        personaEnBaseDeDatos.setTelefono(cliente.getPersona().getTelefono());
-
-        personaRepository.save(personaEnBaseDeDatos);
-        return clienteRepository.guardarCliente(clienteEnBaseDeDatos);
-    }
-
-
-    private void validarSiExistePersona(Cliente cliente) {
-        if (cliente.getPersona().getId() == null) {
-            throw new BusinessException(BusinessException.Type.ERROR_CAMPO_NULL_PERSONA);
-        }
-        Persona existePersona = personaRepository.encontrarPersonaPorId(cliente.getPersona().getId());
-        if (Objects.isNull(existePersona)) {
+        Persona personaEnBaseDatos = personaUseCase.encontrarPorTipoYNumeroDocumento(
+                cliente.getPersona().getTipoDocumento(), cliente.getPersona().getNumeroDocumento());
+        if (Objects.isNull(personaEnBaseDatos)) {
             throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
         }
+        Persona personaActualizada = personaUseCase.editarPersona( cliente, personaEnBaseDatos);
+        Cliente clienteEnBaseDeDatos = obtenerClientePorId(id);
+        clienteEnBaseDeDatos.setPassword(cliente.getPassword());
+        clienteEnBaseDeDatos.setPersona(personaActualizada);
+        return clienteRepository.guardarCliente(clienteEnBaseDeDatos);
     }
-
 
 }

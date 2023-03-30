@@ -1,7 +1,6 @@
 package co.com.banco.cliente;
 
 import co.com.banco.cliente.dto.ClienteDTO;
-import co.com.banco.model.cliente.Cliente;
 import co.com.banco.usecase.cliente.ClienteUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,8 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static co.com.banco.DTOMapper.convertirClienteAClienteDTO;
-import static co.com.banco.DTOMapper.listClienteAListaClienteDTO;
+import static co.com.banco.DTOMapper.*;
 
 @CrossOrigin(
         origins = {"http://localhost:4200"},
@@ -38,8 +36,9 @@ public class ClienteService {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ClienteDTO crearCliente(@RequestBody Cliente cliente) {
-        return convertirClienteAClienteDTO(clienteUseCase.guardarCliente(cliente));
+    public ClienteDTO crearCliente(@RequestBody ClienteDTO clienteDTO) {
+        return convertirClienteAClienteDTO(
+                clienteUseCase.guardarCliente(convertirClienteDTOACliente(clienteDTO)));
     }
 
     @DeleteMapping("/{id}")
@@ -50,8 +49,9 @@ public class ClienteService {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ClienteDTO editarCliente(@RequestBody Cliente cliente, @PathVariable Integer id) {
-        return convertirClienteAClienteDTO(clienteUseCase.actualizarCliente(id, cliente));
+    public ClienteDTO editarCliente(@RequestBody ClienteDTO clienteDTO, @PathVariable Integer id) {
+        return convertirClienteAClienteDTO(
+                clienteUseCase.actualizarCliente(id, convertirClienteDTOACliente(clienteDTO)));
     }
 
 }

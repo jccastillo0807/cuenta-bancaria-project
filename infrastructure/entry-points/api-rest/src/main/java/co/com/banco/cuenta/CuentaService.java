@@ -35,7 +35,8 @@ public class CuentaService {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
     public CuentaDTO crearCuenta(@RequestBody CuentaDTO cuenta) {
-        return convertirCuentaACuentaDTO(cuentaUseCase.guardarCuenta(convertirCuentaDTOACuenta(cuenta)));
+        return convertirCuentaACuentaDTO(
+                cuentaUseCase.guardarCuenta(convertirCuentaDTOACuenta(cuenta)));
     }
 
     @DeleteMapping("/{id}")
@@ -47,6 +48,7 @@ public class CuentaService {
 
     @PutMapping("/{id}")
     public CuentaDTO editarCuenta(@RequestBody CuentaDTO cuenta, @PathVariable Integer id) {
-        return convertirCuentaACuentaDTO(cuentaUseCase.actualizarCuenta(id, convertirCuentaDTOACuenta(cuenta)));
+        return convertirCuentaACuentaDTO(
+                cuentaUseCase.actualizarCuenta(id, convertirCuentaDTOACuenta(cuenta)));
     }
 }
