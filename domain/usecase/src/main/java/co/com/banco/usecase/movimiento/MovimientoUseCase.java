@@ -31,7 +31,6 @@ public class MovimientoUseCase {
     private final ClienteRepository clienteRepository;
 
 
-
     public List<Movimiento> obtenerMovimientos() {
         return movimientoRepository.verMovimientos();
     }
@@ -86,7 +85,6 @@ public class MovimientoUseCase {
                 throw new BusinessException(BusinessException.Type.TIPO_MOVIMIENTO_NO_VALIDO);
         }
     }
-    
 
     private Cuenta guardarNuevoSaldoEnCuenta(Cuenta cuenta) {
         return cuentaRepository.guardarCuenta(cuenta);
@@ -110,7 +108,8 @@ public class MovimientoUseCase {
     }
 
     private void validarSiEsUltimoMovimiento(Movimiento movimiento) {
-        List<Movimiento> movimientosCuenta = movimientoRepository.encontrarMovimientosPorCuentaAsociada(movimiento.getCuenta().getId());
+        List<Movimiento> movimientosCuenta =
+                movimientoRepository.encontrarMovimientosPorCuentaAsociada(movimiento.getCuenta().getId());
         movimientosCuenta.forEach(
                 movimientoActual -> {
                     if (movimientoActual.getId() > movimiento.getId()) {
