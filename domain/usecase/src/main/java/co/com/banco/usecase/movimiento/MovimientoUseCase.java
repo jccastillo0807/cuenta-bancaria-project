@@ -22,17 +22,21 @@ public class MovimientoUseCase {
 
     public static final String DEBITO = "DEBITO";
     public static final String CREDITO = "CREDITO";
-    private final MovimientoRepository movimientoRepository;
 
+    private final MovimientoDebitoUseCase movimientoDebitoUseCase;
+    private final MovimientoCreditoUseCase movimientoCreditoUseCase;
+    private final MovimientoRepository movimientoRepository;
     private final CuentaRepository cuentaRepository;
     private final PersonaRepository personaRepository;
     private final ClienteRepository clienteRepository;
+
+
 
     public List<Movimiento> obtenerMovimientos() {
         return movimientoRepository.verMovimientos();
     }
 
-    public Movimiento findById(Integer id) {
+    public Movimiento encontrarPorId(Integer id) {
         validarIdNulo(id);
         Movimiento movimientoEncontrado = movimientoRepository.encontrarPorId(id);
         if (Objects.isNull(movimientoEncontrado)) {
@@ -54,13 +58,13 @@ public class MovimientoUseCase {
     }
 
     public void eliminarMovimiento(Integer id) {
-        findById(id);
+        encontrarPorId(id);
         movimientoRepository.deleteById(id);
     }
 
     public Movimiento actualizarMovimiento(Integer id, Movimiento movimiento) {
         validarPathConId(id, movimiento.getId());
-        Movimiento movimientoEnBaseDatos = findById(id);
+        Movimiento movimientoEnBaseDatos = encontrarPorId(id);
         validarSiEsUltimoMovimiento(movimiento);
         movimientoEnBaseDatos.setFechaMovimiento(movimiento.getFechaMovimiento());
         movimientoEnBaseDatos.setTipoMovimiento(movimiento.getTipoMovimiento());
@@ -73,50 +77,16 @@ public class MovimientoUseCase {
         switch (movimiento.getTipoMovimiento().toUpperCase()) {
 
             case DEBITO:
-                return construirMovimientoDebito(movimiento);
+                return movimientoDebitoUseCase.construirMovimientoDebito(movimiento);
 
             case CREDITO:
-                return construirMovimientoCredito(movimiento);
+                return movimientoCreditoUseCase.construirMovimientoCredito(movimiento);
 
             default:
                 throw new BusinessException(BusinessException.Type.TIPO_MOVIMIENTO_NO_VALIDO);
         }
     }
-
-    private Movimiento construirMovimientoDebito(Movimiento movimiento) {
-        Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
-        validarSaldoDisponibleEnCuenta(movimiento);
-        movimiento.setValorMovimiento(movimiento.getValorMovimiento() * -1L);
-        if (movimiento.getId() == null) {
-            movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
-            movimiento.setSaldoAnterior(cuentaConsultada.getSaldoInicial());
-            movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
-            return movimiento;
-        }
-        movimiento.setSaldo(movimiento.getSaldoAnterior() + movimiento.getValorMovimiento());
-        movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
-        return movimiento;
-    }
-
-    private Movimiento construirMovimientoCredito(Movimiento movimiento) {
-        Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
-        if (movimiento.getId() == null) {
-            movimiento.setSaldo(cuentaConsultada.getSaldoInicial() + movimiento.getValorMovimiento());
-            movimiento.setSaldoAnterior(cuentaConsultada.getSaldoInicial());
-            movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
-            return movimiento;
-        }
-        movimiento.setSaldo(movimiento.getSaldoAnterior() + movimiento.getValorMovimiento());
-        movimiento.getCuenta().setSaldoInicial(movimiento.getSaldo());
-        return movimiento;
-    }
-
-    private void validarSaldoDisponibleEnCuenta(Movimiento movimiento) {
-        Cuenta cuentaConsultada = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
-        if (cuentaConsultada.getSaldoInicial() - movimiento.getValorMovimiento() < 0L) {
-            throw new BusinessException(BusinessException.Type.SALDO_INFERIOR_CERO);
-        }
-    }
+    
 
     private Cuenta guardarNuevoSaldoEnCuenta(Cuenta cuenta) {
         return cuentaRepository.guardarCuenta(cuenta);

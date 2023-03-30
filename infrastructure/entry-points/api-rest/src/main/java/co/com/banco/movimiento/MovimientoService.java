@@ -29,7 +29,7 @@ public class MovimientoService {
 
     @GetMapping("/{id}")
     public MovimientoDTO encontrarPorId(@PathVariable Integer id) {
-        return movimientoAMovimientoDTO(movimientoUseCase.findById(id));
+        return movimientoAMovimientoDTO(movimientoUseCase.encontrarPorId(id));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
