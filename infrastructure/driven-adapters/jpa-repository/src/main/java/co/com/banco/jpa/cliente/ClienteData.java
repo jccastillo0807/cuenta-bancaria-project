@@ -1,13 +1,11 @@
 package co.com.banco.jpa.cliente;
 
-import co.com.banco.jpa.cuenta.CuentaData;
 import co.com.banco.jpa.persona.PersonaData;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 
 @Getter
@@ -42,6 +40,4 @@ public class ClienteData {
     @JoinColumn(name = "id_persona", referencedColumnName = "id")
     private PersonaData personaData;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clienteData")
-    private List<CuentaData> cuentaDataList;
 }

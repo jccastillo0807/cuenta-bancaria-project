@@ -1,14 +1,12 @@
 package co.com.banco.jpa.cuenta;
 
 import co.com.banco.jpa.cliente.ClienteData;
-import co.com.banco.jpa.movimiento.MovimientoData;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Getter
 @Setter
@@ -39,9 +37,6 @@ public class CuentaData {
     @NotEmpty
     @Column(name = "estado_cuenta")
     private String estado;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "cuentaData")
-    private List<MovimientoData> movimientoDataList;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente", referencedColumnName = "id")

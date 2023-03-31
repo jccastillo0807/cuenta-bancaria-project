@@ -1,12 +1,10 @@
 package co.com.banco.jpa.persona;
 
-import co.com.banco.jpa.cliente.ClienteData;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Getter
 @Setter
@@ -55,6 +53,4 @@ public class PersonaData {
     @Column(name = "telefono")
     private String telefono;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "personaData")
-    private List<ClienteData> clienteDataList;
 }
