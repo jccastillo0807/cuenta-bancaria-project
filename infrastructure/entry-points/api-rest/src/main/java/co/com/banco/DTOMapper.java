@@ -31,7 +31,7 @@ public class DTOMapper {
         return personaDTO;
     }
 
-    private static Persona convertirPersonaDTOAPersona(PersonaDTO personaDTO) {
+    public static Persona convertirPersonaDTOAPersona(PersonaDTO personaDTO) {
         return Persona.builder()
                 .id(personaDTO.getId() != null ? personaDTO.getId() : null)
                 .numeroDocumento(personaDTO.getNumeroDocumento())
@@ -55,7 +55,7 @@ public class DTOMapper {
         return clienteDTO;
     }
 
-    private static Cliente convertirClienteDTOACliente(ClienteDTO clienteDTO) {
+    public static Cliente convertirClienteDTOACliente(ClienteDTO clienteDTO) {
         return Cliente.builder()
                 .id(clienteDTO.getId() != null ? clienteDTO.getId() : null)
                 .password(clienteDTO.getPassword())
@@ -96,6 +96,7 @@ public class DTOMapper {
         movimientoDTO.setTipoMovimiento(movimiento.getTipoMovimiento());
         movimientoDTO.setValorMovimiento(movimiento.getValorMovimiento());
         movimientoDTO.setSaldo(movimiento.getSaldo());
+        movimientoDTO.setSaldoAnterior(movimiento.getSaldoAnterior());
         movimientoDTO.setCuenta(convertirCuentaACuentaDTO(movimiento.getCuenta()));
 
         return movimientoDTO;
@@ -108,11 +109,12 @@ public class DTOMapper {
                 .tipoMovimiento(movimientoDTO.getTipoMovimiento())
                 .valorMovimiento(movimientoDTO.getValorMovimiento())
                 .saldo(movimientoDTO.getSaldo())
+                .saldoAnterior(movimientoDTO.getSaldoAnterior())
                 .cuenta(convertirCuentaDTOACuenta(movimientoDTO.getCuenta()))
                 .build();
     }
 
-    private static ReporteDTO movimientoAReporteDTO(Movimiento movimiento) {
+    public static ReporteDTO movimientoAReporteDTO(Movimiento movimiento) {
         ReporteDTO reporteDTO = new ReporteDTO();
         reporteDTO.setIdMovimiento(movimiento.getId());
         reporteDTO.setMovimiento(movimiento.getTipoMovimiento());
@@ -122,9 +124,7 @@ public class DTOMapper {
                 movimiento.getCuenta().getCliente().getPersona().getApellido());
         reporteDTO.setTipo(movimiento.getCuenta().getTipoCuenta());
         reporteDTO.setSaldoInicial(
-                movimiento.getTipoMovimiento().equalsIgnoreCase("CREDITO") ?
-                        movimiento.getSaldo() - movimiento.getValorMovimiento() :
-                        movimiento.getSaldo() + (movimiento.getValorMovimiento() * -1)
+                movimiento.getSaldoAnterior()
         );
         reporteDTO.setEstado(movimiento.getCuenta().getEstado());
         reporteDTO.setSaldoDisponible(movimiento.getSaldo());

@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
@@ -22,6 +24,7 @@ public class CuentaData {
     private Integer id;
 
     @NotEmpty
+    @Size(min = 6, max = 6, message = "El número de cuenta debe tener 6 digitos.")
     @Column(name = "numero_cuenta", unique = true)
     private String numeroCuenta;
 
@@ -29,7 +32,7 @@ public class CuentaData {
     @Column(name = "tipo_cuenta")
     private String tipoCuenta;
 
-
+    @PositiveOrZero
     @Column(name = "saldo_actual", nullable = false)
     private Long saldoInicial;
 

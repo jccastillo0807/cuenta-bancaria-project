@@ -18,5 +18,6 @@ public class Movimiento {
     private String tipoMovimiento;
     private Long valorMovimiento;
     private Long saldo;
+    private Long saldoAnterior;
     private Cuenta cuenta;
 }

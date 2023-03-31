@@ -6,7 +6,6 @@ import co.com.banco.model.cliente.Cliente;
 import co.com.banco.model.persona.Persona;
 import co.com.banco.usecase.cliente.ClienteUseCase;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,9 +68,6 @@ class ClienteServiceTest {
         clienteDTO.setPersona(personaDTO);
     }
 
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void shouldVerTodosLosClientes() {
@@ -82,14 +78,14 @@ class ClienteServiceTest {
 
     @Test
     void shouldEncontrarClientePorId() {
-        when(clienteUseCase.obtenerClientePorId(any())).thenReturn(cliente);
+        when(clienteUseCase.obtenerPor(any())).thenReturn(cliente);
         ClienteDTO clienteParcial = clienteService.encontrarClientePorId(any());
         Assertions.assertThat(clienteParcial).isInstanceOf(ClienteDTO.class);
     }
 
     @Test
     void shouldCrearCliente() {
-        when(clienteUseCase.guardarCliente(any())).thenReturn(cliente);
+        when(clienteUseCase.guardar(any())).thenReturn(cliente);
         ClienteDTO clienteParcial = clienteService.crearCliente(any());
         Assertions.assertThat(clienteParcial).isInstanceOf(ClienteDTO.class);
     }
@@ -104,7 +100,7 @@ class ClienteServiceTest {
 
     @Test
     void shouldEditarCliente() {
-        when(clienteUseCase.actualizarCliente(any(), any())).thenReturn(cliente);
+        when(clienteUseCase.actualizar(any(), any())).thenReturn(cliente);
         ClienteDTO clienteParcial = clienteService.editarCliente(any(), any());
         Assertions.assertThat(clienteParcial).isInstanceOf(ClienteDTO.class);
     }

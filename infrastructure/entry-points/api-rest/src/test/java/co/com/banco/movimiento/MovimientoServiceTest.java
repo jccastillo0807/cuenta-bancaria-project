@@ -76,8 +76,8 @@ class MovimientoServiceTest {
 
     @Test
     void shouldEncontrarPorId() {
-        when(movimientoUseCase.findById(any())).thenReturn(movimiento);
-        Movimiento movimientoParcial = movimientoUseCase.findById(any());
+        when(movimientoUseCase.encontrarPorId(any())).thenReturn(movimiento);
+        Movimiento movimientoParcial = movimientoUseCase.encontrarPorId(any());
         Assertions.assertThat(movimientoParcial).isInstanceOf(Movimiento.class);
     }
 
