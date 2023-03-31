@@ -5,8 +5,10 @@ import co.com.banco.usecase.cuenta.CuentaUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static co.com.banco.DTOMapper.*;
@@ -29,26 +31,29 @@ public class CuentaService {
 
     @GetMapping("/{id}")
     public CuentaDTO encontrarCuentaPorId(@PathVariable Integer id) {
-        return convertirCuentaACuentaDTO(cuentaUseCase.obtenerCuentaPorId(id));
+        return convertirCuentaACuentaDTO(cuentaUseCase.obtenerCuentaPor(id));
     }
 
+    @Transactional
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public CuentaDTO crearCuenta(@RequestBody CuentaDTO cuenta) {
+    public CuentaDTO crearCuenta(@Valid @RequestBody CuentaDTO cuenta) {
         return convertirCuentaACuentaDTO(
-                cuentaUseCase.guardarCuenta(convertirCuentaDTOACuenta(cuenta)));
+                cuentaUseCase.guardar(convertirCuentaDTOACuenta(cuenta)));
     }
 
+    @Transactional
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void eliminarCuenta(@PathVariable Integer id) {
-        cuentaUseCase.eliminarCuenta(id);
+        cuentaUseCase.eliminar(id);
     }
 
 
+    @Transactional
     @PutMapping("/{id}")
-    public CuentaDTO editarCuenta(@RequestBody CuentaDTO cuenta, @PathVariable Integer id) {
+    public CuentaDTO editarCuenta(@Valid @RequestBody CuentaDTO cuenta, @PathVariable Integer id) {
         return convertirCuentaACuentaDTO(
-                cuentaUseCase.actualizarCuenta(id, convertirCuentaDTOACuenta(cuenta)));
+                cuentaUseCase.actualizar(id, convertirCuentaDTOACuenta(cuenta)));
     }
 }

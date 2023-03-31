@@ -103,15 +103,15 @@ class CuentaServiceTest {
 
     @Test
     void shouldEncontrarCuentaPorId() {
-        when(cuentaUseCase.obtenerCuentaPorId(any())).thenReturn(cuenta);
-        Cuenta cuentaParcial = cuentaUseCase.obtenerCuentaPorId(any());
+        when(cuentaUseCase.obtenerCuentaPor(any())).thenReturn(cuenta);
+        Cuenta cuentaParcial = cuentaUseCase.obtenerCuentaPor(any());
         Assertions.assertThat(cuentaParcial).isInstanceOf(Cuenta.class);
     }
 
     @Test
     void shouldCrearCliente() {
-        when(cuentaUseCase.guardarCuenta(any())).thenReturn(cuenta);
-        Cuenta cuentaParcial = cuentaUseCase.guardarCuenta(any());
+        when(cuentaUseCase.guardar(any())).thenReturn(cuenta);
+        Cuenta cuentaParcial = cuentaUseCase.guardar(any());
         Assertions.assertThat(cuentaParcial).isInstanceOf(Cuenta.class);
     }
 
@@ -125,8 +125,8 @@ class CuentaServiceTest {
 
     @Test
     void editarCuenta() {
-        when(cuentaUseCase.actualizarCuenta(any(),any())).thenReturn(cuenta);
-        Cuenta cuentaParcial = cuentaUseCase.actualizarCuenta(any(), any());
+        when(cuentaUseCase.actualizar(any(),any())).thenReturn(cuenta);
+        Cuenta cuentaParcial = cuentaUseCase.actualizar(any(), any());
         Assertions.assertThat(cuentaParcial).isNotNull();
         Assertions.assertThat(cuentaParcial).isInstanceOf(Cuenta.class);
     }

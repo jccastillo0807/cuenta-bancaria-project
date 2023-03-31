@@ -5,8 +5,10 @@ import co.com.banco.usecase.movimiento.MovimientoUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static co.com.banco.DTOMapper.*;
@@ -32,22 +34,25 @@ public class MovimientoService {
         return movimientoAMovimientoDTO(movimientoUseCase.encontrarPorId(id));
     }
 
+    @Transactional
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public MovimientoDTO crearMovimiento(@RequestBody MovimientoDTO movimientoDTO) {
+    public MovimientoDTO crearMovimiento(@Valid @RequestBody MovimientoDTO movimientoDTO) {
         return movimientoAMovimientoDTO(
                 movimientoUseCase.guardarMovimiento(movimientoDTOAMovimiento(movimientoDTO))
         );
     }
 
+    @Transactional
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void eliminarMovimiento(@PathVariable Integer id) {
         movimientoUseCase.eliminarMovimiento(id);
     }
 
+    @Transactional
     @PutMapping("/{id}")
-    public MovimientoDTO editarCliente(@RequestBody MovimientoDTO movimientoDTO, @PathVariable Integer id) {
+    public MovimientoDTO editarCliente(@Valid @RequestBody MovimientoDTO movimientoDTO, @PathVariable Integer id) {
         return movimientoAMovimientoDTO(
                 movimientoUseCase.actualizarMovimiento(id, movimientoDTOAMovimiento(movimientoDTO))
         );

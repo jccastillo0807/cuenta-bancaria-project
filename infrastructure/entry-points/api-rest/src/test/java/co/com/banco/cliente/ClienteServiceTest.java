@@ -78,14 +78,14 @@ class ClienteServiceTest {
 
     @Test
     void shouldEncontrarClientePorId() {
-        when(clienteUseCase.obtenerClientePorId(any())).thenReturn(cliente);
+        when(clienteUseCase.obtenerPor(any())).thenReturn(cliente);
         ClienteDTO clienteParcial = clienteService.encontrarClientePorId(any());
         Assertions.assertThat(clienteParcial).isInstanceOf(ClienteDTO.class);
     }
 
     @Test
     void shouldCrearCliente() {
-        when(clienteUseCase.guardarCliente(any())).thenReturn(cliente);
+        when(clienteUseCase.guardar(any())).thenReturn(cliente);
         ClienteDTO clienteParcial = clienteService.crearCliente(any());
         Assertions.assertThat(clienteParcial).isInstanceOf(ClienteDTO.class);
     }
@@ -100,7 +100,7 @@ class ClienteServiceTest {
 
     @Test
     void shouldEditarCliente() {
-        when(clienteUseCase.actualizarCliente(any(), any())).thenReturn(cliente);
+        when(clienteUseCase.actualizar(any(), any())).thenReturn(cliente);
         ClienteDTO clienteParcial = clienteService.editarCliente(any(), any());
         Assertions.assertThat(clienteParcial).isInstanceOf(ClienteDTO.class);
     }

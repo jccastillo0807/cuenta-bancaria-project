@@ -5,8 +5,10 @@ import co.com.banco.usecase.cliente.ClienteUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static co.com.banco.DTOMapper.*;
@@ -31,27 +33,30 @@ public class ClienteService {
     @GetMapping("/{id}")
     public ClienteDTO encontrarClientePorId(@PathVariable Integer id) {
 
-        return convertirClienteAClienteDTO(clienteUseCase.obtenerClientePorId(id));
+        return convertirClienteAClienteDTO(clienteUseCase.obtenerPor(id));
     }
 
+    @Transactional
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ClienteDTO crearCliente(@RequestBody ClienteDTO clienteDTO) {
+    public ClienteDTO crearCliente(@Valid @RequestBody ClienteDTO clienteDTO) {
         return convertirClienteAClienteDTO(
-                clienteUseCase.guardarCliente(convertirClienteDTOACliente(clienteDTO)));
+                clienteUseCase.guardar(convertirClienteDTOACliente(clienteDTO)));
     }
 
+    @Transactional
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminarCliente(@PathVariable Integer id) {
-        clienteUseCase.inactivarCliente(id);
+        clienteUseCase.inactivarPor(id);
     }
 
+    @Transactional
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ClienteDTO editarCliente(@RequestBody ClienteDTO clienteDTO, @PathVariable Integer id) {
+    public ClienteDTO editarCliente(@Valid @RequestBody ClienteDTO clienteDTO, @PathVariable Integer id) {
         return convertirClienteAClienteDTO(
-                clienteUseCase.actualizarCliente(id, convertirClienteDTOACliente(clienteDTO)));
+                clienteUseCase.actualizar(id, convertirClienteDTOACliente(clienteDTO)));
     }
 
 }

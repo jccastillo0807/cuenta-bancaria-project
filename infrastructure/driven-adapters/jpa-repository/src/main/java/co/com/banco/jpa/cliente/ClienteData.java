@@ -24,6 +24,7 @@ public class ClienteData {
     private Integer id;
 
     @NotEmpty
+    @Size(min = 4, max = 4, message = "El password debe tener 4 números.")
     @Column(name = "password")
     private String password;
 
@@ -33,6 +34,7 @@ public class ClienteData {
     private String usuario;
 
     @NotEmpty
+    @Size(min = 5, max = 15)
     @Column(name = "estado")
     private String estado;
 

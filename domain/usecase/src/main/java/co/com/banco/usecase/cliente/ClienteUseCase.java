@@ -25,7 +25,7 @@ public class ClienteUseCase {
         return clienteRepository.encontrarClientes(ESTADO_ACTIVO);
     }
 
-    public Cliente obtenerClientePorId(Integer id) {
+    public Cliente obtenerPor(Integer id) {
         validarIdNulo(id);
         Cliente clienteEncontrado = clienteRepository.encontrarPorId(id);
         if (Objects.isNull(clienteEncontrado) || !clienteEncontrado.getEstado().equalsIgnoreCase(ESTADO_ACTIVO)) {
@@ -34,7 +34,8 @@ public class ClienteUseCase {
         return clienteEncontrado;
     }
 
-    public Cliente guardarCliente(Cliente cliente) {
+
+    public Cliente guardar(Cliente cliente) {
         validarCamposCliente(cliente);
         Persona personaEncontrada = personaUseCase.encontrarPorTipoYNumeroDocumento(
                 cliente.getPersona().getTipoDocumento(), cliente.getPersona().getNumeroDocumento()
@@ -48,21 +49,23 @@ public class ClienteUseCase {
     }
 
 
-    public void inactivarCliente(Integer id) {
-        Cliente clienteEncontrado = obtenerClientePorId(id);
+    public void inactivarPor(Integer id) {
+        Cliente clienteEncontrado = obtenerPor(id);
         clienteEncontrado.setEstado(ESTADO_INACTIVO);
         clienteRepository.guardarCliente(clienteEncontrado);
     }
 
-    public Cliente actualizarCliente(Integer id, Cliente cliente) {
+    public Cliente actualizar(Integer id, Cliente cliente) {
         validarCamposCliente(cliente);
+
         Persona personaEnBaseDatos = personaUseCase.encontrarPorTipoYNumeroDocumento(
                 cliente.getPersona().getTipoDocumento(), cliente.getPersona().getNumeroDocumento());
+
         if (Objects.isNull(personaEnBaseDatos)) {
             throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
         }
         Persona personaActualizada = personaUseCase.editarPersona( cliente, personaEnBaseDatos);
-        Cliente clienteEnBaseDeDatos = obtenerClientePorId(id);
+        Cliente clienteEnBaseDeDatos = obtenerPor(id);
         clienteEnBaseDeDatos.setPassword(cliente.getPassword());
         clienteEnBaseDeDatos.setPersona(personaActualizada);
         return clienteRepository.guardarCliente(clienteEnBaseDeDatos);

@@ -29,7 +29,7 @@ public class CuentaUseCase {
         return cuentaRepository.encontrarCuentas(ACTIVO);
     }
 
-    public Cuenta obtenerCuentaPorId(Integer id) {
+    public Cuenta obtenerCuentaPor(Integer id) {
         validarIdNulo(id);
         Cuenta cuentaEncontrada = cuentaRepository.encontrarCuentaPorId(id);
         if (Objects.isNull(cuentaEncontrada) || !cuentaEncontrada.getEstado().equalsIgnoreCase(ACTIVO)) {
@@ -39,23 +39,25 @@ public class CuentaUseCase {
     }
 
 
-    public Cuenta guardarCuenta(Cuenta cuenta) {
+    public Cuenta guardar(Cuenta cuenta) {
         validarCamposCuenta(cuenta);
+        validarTipoCuenta(cuenta.getTipoCuenta());
         validarSiExisteClienteYPersona(cuenta);
         validarSiExisteCuenta(cuenta);
         return cuentaRepository.guardarCuenta(cuenta);
     }
 
 
-    public void eliminarCuenta(Integer id) {
-        Cuenta cuentaEncontrada = obtenerCuentaPorId(id);
+    public void eliminar(Integer id) {
+        Cuenta cuentaEncontrada = obtenerCuentaPor(id);
         cuentaEncontrada.setEstado(INACTIVO);
         cuentaRepository.guardarCuenta(cuentaEncontrada);
     }
 
-    public Cuenta actualizarCuenta(Integer id, Cuenta cuenta) {
+    public Cuenta actualizar(Integer id, Cuenta cuenta) {
         validarIdNulo(id);
         validarCamposCuenta(cuenta);
+        validarTipoCuenta(cuenta.getTipoCuenta());
         Cuenta cuentaEnBaseDeDatos = cuentaRepository.buscarPorNumeroCuenta(cuenta.getNumeroCuenta());
         if (Objects.isNull(cuentaEnBaseDeDatos) || !cuentaEnBaseDeDatos.getEstado().equalsIgnoreCase(ACTIVO)) {
             throw new BusinessException(BusinessException.Type.CUENTA_NO_ENCONTRADA);
@@ -66,7 +68,13 @@ public class CuentaUseCase {
         return cuentaRepository.guardarCuenta(cuentaEnBaseDeDatos);
     }
 
-    private void validarSiExisteCuenta(Cuenta cuenta){
+    private void validarTipoCuenta(String tipoCuenta) {
+        if (!tipoCuenta.equalsIgnoreCase("AHORRO") && !tipoCuenta.equalsIgnoreCase("CORRIENTE")) {
+            throw new BusinessException(BusinessException.Type.TIPO_CUENTA_NO_VALIDO);
+        }
+    }
+
+    private void validarSiExisteCuenta(Cuenta cuenta) {
         Cuenta cuentaEncontrada = cuentaRepository.buscarPorNumeroCuenta(cuenta.getNumeroCuenta());
         if (Objects.nonNull(cuentaEncontrada)) {
             throw new BusinessException(BusinessException.Type.CUENTA_YA_EXISTE);
@@ -74,7 +82,10 @@ public class CuentaUseCase {
     }
 
     private void validarSiExisteClienteYPersona(Cuenta cuenta) {
-        Persona existePersona = personaRepository.encontrarPersonaPorId(cuenta.getCliente().getPersona().getId());
+        Persona existePersona = personaRepository.encontrarPorTipoYNumeroDocumento(
+                cuenta.getCliente().getPersona().getTipoDocumento(),
+                cuenta.getCliente().getPersona().getNumeroDocumento()
+        );
         Cliente existeCliente = clienteRepository.encontrarPorId(cuenta.getCliente().getId());
 
         if (Objects.isNull(existePersona)) {

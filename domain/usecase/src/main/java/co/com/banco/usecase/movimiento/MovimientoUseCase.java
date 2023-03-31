@@ -91,10 +91,12 @@ public class MovimientoUseCase {
     }
 
     private void validarEstructuraMovimiento(Movimiento movimiento) {
-        Persona existePersona = personaRepository.encontrarPersonaPorId(
-                movimiento.getCuenta().getCliente().getPersona().getId());
+        Persona existePersona = personaRepository.encontrarPorTipoYNumeroDocumento(
+                movimiento.getCuenta().getCliente().getPersona().getTipoDocumento(),
+                movimiento.getCuenta().getCliente().getPersona().getNumeroDocumento()
+        );
         Cliente existeCliente = clienteRepository.encontrarPorId(movimiento.getCuenta().getCliente().getId());
-        Cuenta existeCuenta = cuentaRepository.encontrarCuentaPorId(movimiento.getCuenta().getId());
+        Cuenta existeCuenta = cuentaRepository.buscarPorNumeroCuenta(movimiento.getCuenta().getNumeroCuenta());
 
         if (Objects.isNull(existePersona)) {
             throw new BusinessException(BusinessException.Type.ERROR_PERSONA_NO_REGISTRADA);
@@ -110,6 +112,7 @@ public class MovimientoUseCase {
     private void validarSiEsUltimoMovimiento(Movimiento movimiento) {
         List<Movimiento> movimientosCuenta =
                 movimientoRepository.encontrarMovimientosPorCuentaAsociada(movimiento.getCuenta().getId());
+
         movimientosCuenta.forEach(
                 movimientoActual -> {
                     if (movimientoActual.getId() > movimiento.getId()) {
@@ -117,5 +120,6 @@ public class MovimientoUseCase {
                     }
                 }
         );
+
     }
 }

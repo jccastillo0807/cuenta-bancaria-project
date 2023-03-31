@@ -28,7 +28,8 @@ public class BusinessException extends ApplicationException {
         MOVIMIENTO_NO_PERMITIDO("El valor del movimiento bancario debe ser superior a cero."),
         MOVIMIENTO_NO_ES_ULTIMO("Solo se permite modificar el último movimiento bancario."),
         OPERACION_NO_PERMITDA("Operacion no permitida."),
-        PATH_NO_IGUAL_ID("Id y Path del objeto a editar deben ser iguales.");
+        PATH_NO_IGUAL_ID("Id y Path del objeto a editar deben ser iguales."),
+        TIPO_CUENTA_NO_VALIDO("Tipo de cuenta no valido.");
 
         private final String message;
 

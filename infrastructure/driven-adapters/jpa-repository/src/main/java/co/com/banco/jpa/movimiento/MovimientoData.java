@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Getter
@@ -24,15 +26,18 @@ public class MovimientoData {
     private Date fechaMovimiento;
 
     @NotEmpty
+    @Size(min = 6, max = 10, message = "El número de cuenta debe tener 6 digitos.")
     @Column(name = "tipo_movimiento")
     private String tipoMovimiento;
 
     @Column(name = "valor_movimiento", nullable = false)
     private Long valorMovimiento;
 
+    @PositiveOrZero
     @Column(name = "saldo", nullable = false)
     private Long saldo;
 
+    @PositiveOrZero
     @Column(name = "saldo_anterior", nullable = false)
     private Long saldoAnterior;
 
