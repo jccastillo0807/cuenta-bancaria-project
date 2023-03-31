@@ -31,5 +31,8 @@ management:
     health:
       probes:
         enabled: true
-
+config:
+  security:
+    user: "admin"
+    password: "50e&7BqX2&gdV$d!c6QHsmuSk5Yl6S00WI5@5CeI"
 logging.level.org.hibernate.SQL: debug

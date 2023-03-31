@@ -1,5 +1,6 @@
 package co.com.banco.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class WebSecurityConfig {
+
+    @Value("${config.security.user}")
+    private String user;
+
+    @Value("${config.security.password}")
+    private String password;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager autManager) throws Exception {
@@ -36,8 +43,8 @@ public class WebSecurityConfig {
     UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
         manager.createUser(
-                User.withUsername("admin")
-                        .password(passwordEncoder().encode("admin"))
+                User.withUsername(user)
+                        .password(passwordEncoder().encode(password))
                         .roles()
                         .build()
         );
