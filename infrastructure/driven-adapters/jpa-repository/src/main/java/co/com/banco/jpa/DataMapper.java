@@ -25,6 +25,7 @@ public class DataMapper {
                 .tipoMovimiento(movimientoData.getTipoMovimiento())
                 .valorMovimiento(movimientoData.getValorMovimiento())
                 .saldo(movimientoData.getSaldo())
+                .saldoAnterior(movimientoData.getSaldoAnterior())
                 .cuenta(convertirCuentaDataACuenta(movimientoData.getCuentaData()))
                 .build();
     }
@@ -36,6 +37,7 @@ public class DataMapper {
                 .tipoMovimiento(movimiento.getTipoMovimiento())
                 .valorMovimiento(movimiento.getValorMovimiento())
                 .saldo(movimiento.getSaldo())
+                .saldoAnterior(movimiento.getSaldoAnterior())
                 .cuentaData(convertirCuentaACuentaData(movimiento.getCuenta()))
                 .build();
     }
@@ -48,11 +50,6 @@ public class DataMapper {
                 .saldoInicial(cuentaData.getSaldoInicial())
                 .estado(cuentaData.getEstado())
                 .cliente(convertirClienteDataACliente(cuentaData.getClienteData()))
-                /*.listaMovimientos(
-                        cuentaData.getMovimientoDataList() != null ?
-                                converitirListaMovimientosDataAListaMovimiento(cuentaData.getMovimientoDataList()) :
-                                new ArrayList<>()
-                )*/
                 .build();
     }
 
@@ -74,7 +71,6 @@ public class DataMapper {
                 .usuario(clienteData.getUsuario())
                 .password(clienteData.getPassword())
                 .estado(clienteData.getEstado())
-//                .cuentaDataList(clienteData.getCuentaDataList())
                 .persona(convertirPersonaDataAPersona(clienteData.getPersonaData()))
                 .build();
     }
@@ -86,7 +82,6 @@ public class DataMapper {
                 .password(cliente.getPassword())
                 .usuario(cliente.getUsuario())
                 .password(cliente.getPassword())
-//                .cuentaDataList(clienteData.getCuentaDataList())
                 .personaData(convertirPersonaAPersonaData(cliente.getPersona()))
                 .build();
     }

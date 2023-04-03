@@ -11,9 +11,4 @@ import org.springframework.context.annotation.FilterType;
         },
         useDefaultFilters = false)
 public class UseCasesConfig {
-
-        /*@Bean
-        public MovimientoUseCase getMovimientoUseCase(MovimientoRepository movimientoRepository){
-                return new MovimientoUseCase(movimientoRepository);
-        }*/
 }
